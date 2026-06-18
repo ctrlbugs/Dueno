@@ -1,0 +1,27 @@
+# Local Postgres for Dueno backend development.
+# Usage:
+#   docker compose up -d
+#   docker compose exec postgres psql -U dueno -d dueno -f /schema/001_initial.sql
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dueno-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dueno
+      POSTGRES_PASSWORD: dueno
+      POSTGRES_DB: dueno
+    volumes:
+      - dueno_pg_data:/var/lib/postgresql/data
+      - ./server/schema:/schema:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dueno -d dueno"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dueno_pg_data:

@@ -1,0 +1,54 @@
+# Dueno — Nginx production example
+# Copy to your server, e.g. /etc/nginx/sites-available/dueno.conf
+# Then: sudo ln -s /etc/nginx/sites-available/dueno.conf /etc/nginx/sites-enabled/
+#       sudo nginx -t && sudo systemctl reload nginx
+#
+# Replace:
+#   yourdomain.com
+#   /var/www/dueno/dist
+#   YOUR_NEWSAPI_KEY / YOUR_GNEWS_KEY / YOUR_NEWSDATA_KEY
+
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+
+    root /var/www/dueno/dist;
+    index index.html;
+
+    # NewsAPI proxy — keys stay on the server
+    location ~ ^/api/property-news/(.*)$ {
+        proxy_ssl_server_name on;
+        proxy_set_header Host newsapi.org;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass https://newsapi.org/v2/$1$is_args$args&apiKey=YOUR_NEWSAPI_KEY;
+    }
+
+    # GNews proxy
+    location ~ ^/api/gnews/(.*)$ {
+        proxy_ssl_server_name on;
+        proxy_set_header Host gnews.io;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass https://gnews.io/api/v4/$1$is_args$args&apikey=YOUR_GNEWS_KEY;
+    }
+
+    # NewsData proxy
+    location ~ ^/api/newsdata/(.*)$ {
+        proxy_ssl_server_name on;
+        proxy_set_header Host newsdata.io;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass https://newsdata.io/api/1/$1$is_args$args&apikey=YOUR_NEWSDATA_KEY;
+    }
+
+    # React SPA — all other routes serve index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2)$ {
+        expires 7d;
+        add_header Cache-Control "public, immutable";
+    }
+}
+
+# Optional HTTPS (recommended) — use Certbot:
+#   sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com

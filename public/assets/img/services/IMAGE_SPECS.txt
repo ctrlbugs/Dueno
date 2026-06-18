@@ -1,0 +1,28 @@
+Dueno Services — image upload guide
+====================================
+
+Folder: public/assets/img/services/
+
+Upload 6 images (one per service), using these exact filenames:
+
+  1. property-sales.jpg
+  2. property-rentals.jpg
+  3. mortgages.jpg
+  4. artisan-services.jpg
+  5. moving-services.jpg
+  6. property-cleaning.jpg
+
+Recommended size (single file for hero + cards):
+  1920 x 900 pixels  (landscape, ~16:7.5)
+  OR 1920 x 1080 px  (16:9)
+
+Optional separate homepage carousel crops:
+  960 x 640 pixels   (3:2 aspect ratio)
+
+Format: JPG or WebP
+Target file size: under 500 KB each
+
+Composition tips:
+  - Use high-quality, real-world property/lifestyle photos
+  - Keep the bottom-left area slightly darker or uncluttered (hero text sits there)
+  - Avoid placing faces or logos in the bottom-left corner
