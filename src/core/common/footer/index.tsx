@@ -3,6 +3,7 @@ import { all_routes } from "../../../feature-module/routes/all_routes";
 import ImageWithBasePath from "../../imageWithBasePath";
 import { useEffect, useState } from "react";
 import { SITE_CONTACT } from "../../../data/siteContact";
+import NewsletterSubscribeForm from "../../../shared/components/NewsletterSubscribeForm";
 
 const Footer = () => {
   const location = useLocation();
@@ -323,21 +324,7 @@ const Footer = () => {
                           email.
                         </p>
                       </div>
-                      <div className="d-flex align-items-center subscribe-wrap">
-                        <div className="input-group input-group-flat">
-                          <span className="input-group-text">
-                            <i className="material-icons-outlined">email</i>
-                          </span>
-                          <input
-                            type="email"
-                            className="form-control form-control-lg"
-                            placeholder="Enter Email Address"
-                          />
-                        </div>
-                        <button type="submit" className="btn btn-primary">
-                          <i className="material-icons-outlined">send</i>
-                        </button>
-                      </div>
+                      <NewsletterSubscribeForm variant="footer" source="footer" />
                       <div className="social-icon">
                         <Link
                           to="https://facebook.com/duenoproperty"

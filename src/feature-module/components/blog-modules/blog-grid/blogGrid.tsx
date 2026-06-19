@@ -1,10 +1,10 @@
 import Breadcrumb from "../../../../core/common/Breadcrumb/breadcrumb";
 import { NewsArticleCard } from "../../../../core/common/news/NewsArticleCard";
 import { usePropertyNews } from "../../../../hooks/usePropertyNews";
+import { getArticleImageExclusions } from "../../../../services/propertyNewsService";
 
 const BlogGrid = () => {
   const { articles } = usePropertyNews();
-  const articleImageUrls = articles.map((item) => item.imageUrl);
 
   return (
     <>
@@ -22,9 +22,7 @@ const BlogGrid = () => {
                   <NewsArticleCard
                     article={article}
                     imageSlot={index}
-                    excludeImageUrls={articleImageUrls.filter(
-                      (url) => url !== article.imageUrl,
-                    )}
+                    excludeImageUrls={getArticleImageExclusions(articles, index)}
                   />
                 </div>
               ))}

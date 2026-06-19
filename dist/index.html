@@ -17,6 +17,9 @@
     <meta name="author" content="Dueno Property" />
     <meta name="application-name" content="Dueno Property" />
     <meta name="theme-color" content="#000000" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://duenoproperty.com/" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -50,11 +53,37 @@
     <meta name="twitter:image" content="https://duenoproperty.com/assets/img/og/dueno-og.png" />
     <meta name="twitter:image:alt" content="Dueno Property logo on black background" />
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://duenoproperty.com/#organization",
+            "name": "Dueno Property",
+            "url": "https://duenoproperty.com/",
+            "logo": "https://duenoproperty.com/assets/img/logo.svg",
+            "description": "Verified real estate sales and rentals across Nigeria.",
+            "areaServed": "Nigeria"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://duenoproperty.com/#website",
+            "url": "https://duenoproperty.com/",
+            "name": "Dueno Property",
+            "publisher": { "@id": "https://duenoproperty.com/#organization" },
+            "inLanguage": "en-NG"
+          }
+        ]
+      }
+    </script>
+
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/assets/img/favicon.png" />
-    <link rel="apple-touch-icon" href="/assets/img/apple-icon.png" />
-    <script type="module" crossorigin src="/assets/index-obI62e9h.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BvB6u4GS.css">
+    <link rel="icon" href="/assets/img/favicon.png" type="image/png" />
+    <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/img/favicon.png" />
+    <script type="module" crossorigin src="/assets/index-BiEOdDG2.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DL7efeu8.css">
   </head>
   <body>
     <div id="root"></div>

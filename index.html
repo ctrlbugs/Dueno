@@ -17,6 +17,9 @@
     <meta name="author" content="Dueno Property" />
     <meta name="application-name" content="Dueno Property" />
     <meta name="theme-color" content="#000000" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="__SITE_URL__/" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -50,9 +53,35 @@
     <meta name="twitter:image" content="__SITE_URL__/assets/img/og/dueno-og.png" />
     <meta name="twitter:image:alt" content="Dueno Property logo on black background" />
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "__SITE_URL__/#organization",
+            "name": "Dueno Property",
+            "url": "__SITE_URL__/",
+            "logo": "__SITE_URL__/assets/img/logo.svg",
+            "description": "Verified real estate sales and rentals across Nigeria.",
+            "areaServed": "Nigeria"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "__SITE_URL__/#website",
+            "url": "__SITE_URL__/",
+            "name": "Dueno Property",
+            "publisher": { "@id": "__SITE_URL__/#organization" },
+            "inLanguage": "en-NG"
+          }
+        ]
+      }
+    </script>
+
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/assets/img/favicon.png" />
-    <link rel="apple-touch-icon" href="/assets/img/apple-icon.png" />
+    <link rel="icon" href="/assets/img/favicon.png" type="image/png" />
+    <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/img/favicon.png" />
   </head>
   <body>
     <div id="root"></div>

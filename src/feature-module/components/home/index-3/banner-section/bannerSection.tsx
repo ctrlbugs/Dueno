@@ -150,7 +150,7 @@ const BannerSection = () => {
               </div>
             </div>
             {/* end col */}
-            <div className="col-xxl-4 col-lg-5">
+            <div className="col-xxl-4 col-lg-5 banner-hero-media-col">
               <div className="banner-right-content">
                 <div className="banner-card">
                   <div className="card-img">

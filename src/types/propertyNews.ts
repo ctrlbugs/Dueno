@@ -18,7 +18,7 @@ export type PropertyNewsSource =
   | "seed";
 
 export interface PropertyNewsCache {
-  version: 7;
+  version: 8;
   articles: PropertyNewsArticle[];
   liveImages: string[];
   fetchedAt: string;

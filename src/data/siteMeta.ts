@@ -40,6 +40,8 @@ export type PageMeta = {
   title?: string;
   description?: string;
   path?: string;
+  /** Canonical URL path when different from `path` (e.g. /home → /). */
+  canonicalPath?: string;
   noIndex?: boolean;
 };
 
@@ -51,7 +53,7 @@ export const resolvePageMeta = (meta: PageMeta = {}) => {
       : SITE_DEFAULT_TITLE;
 
   const description = meta.description ?? SITE_DEFAULT_DESCRIPTION;
-  const url = getAbsoluteUrl(meta.path ?? "");
+  const url = getAbsoluteUrl(meta.canonicalPath ?? meta.path ?? "");
   const image = getOgImageUrl();
 
   return { title, description, url, image };
@@ -62,6 +64,7 @@ export const PAGE_META_BY_PATH: Record<string, PageMeta> = {
     title: SITE_DEFAULT_TITLE,
     description: SITE_DEFAULT_DESCRIPTION,
     path: "/home",
+    canonicalPath: "/",
   },
   "/buy-property": {
     title: "Properties for Sale",

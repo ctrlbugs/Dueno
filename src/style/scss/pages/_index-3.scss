@@ -10,9 +10,11 @@
 	border-radius: 0 0 20px 20px;
 	position: relative;
 	z-index: 1;
+	overflow-x: clip;
 	@include respond-below(lg) {
 		padding-top: 148px;
 		background-attachment: scroll;
+		background-position: center top;
 	}
 	@include respond-below(sm) {
 		padding-top: 158px;
@@ -20,6 +22,12 @@
 	@include respond-above(md) {
 		@include respond-below(lg) {
 			padding-top: 142px;
+		}
+	}
+	@include respond-above(md) {
+		@include respond-below(xl) {
+			background-size: cover;
+			background-position: 65% center;
 		}
 	}
 	&::after {
@@ -111,6 +119,16 @@
 	background: #FFFFFF26;
 	margin-bottom: 10px;
 }
+.banner-hero-media-col {
+	@include respond-above(lg) {
+		@include respond-below(xxl) {
+			max-width: 380px;
+			margin-left: auto;
+			flex: 0 0 auto;
+			width: 100%;
+		}
+	}
+}
 .banner-right-content {
 	@include respond-below(lg) {
 		text-align: center;
@@ -118,6 +136,18 @@
 	@include respond-below(md) {
 		text-align: left;
 		width: 100%;
+	}
+	@include respond-above(md) {
+		@include respond-below(lg) {
+			max-width: 420px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+	@include respond-above(lg) {
+		@include respond-below(xl) {
+			max-width: 100%;
+		}
 	}
 	.banner-card {
 		background: #FFFFFF26;
@@ -131,6 +161,14 @@
 		gap: 16px;
 		@include respond-below(lg) {
 			display: inline-flex;
+			max-width: 100%;
+		}
+		@include respond-above(md) {
+			@include respond-below(lg) {
+				display: flex;
+				width: 100%;
+				max-width: 420px;
+			}
 		}
 		@include respond-below(md) {
 			display: flex;
@@ -151,6 +189,13 @@
 			flex-shrink: 0;
 			width: 120px;
 			height: 120px;
+			@include respond-above(md) {
+				@include respond-below(lg) {
+					width: 104px;
+					height: 104px;
+					min-width: 104px;
+				}
+			}
 			@include respond-below(md) {
 				width: 96px;
 				height: 96px;

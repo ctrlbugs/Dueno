@@ -19,7 +19,7 @@ header {
         top: 0 !important;
         left: 0;
         width: 100%;
-        z-index: 100;
+        z-index: 1050;
         @include transition(all 0.9s);
         background-color: var(--white);
         -webkit-animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
@@ -1645,6 +1645,11 @@ html.menu-opened body {
         padding-top: env(safe-area-inset-top, 0);
         box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
 
+        &.header-three:not(.fixed) {
+            box-shadow: none;
+            background: transparent;
+        }
+
         &.fixed {
             box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
         }
@@ -1658,6 +1663,8 @@ html.menu-opened body {
         .navbar-header {
             align-items: center;
             gap: 12px;
+            position: relative;
+            z-index: 2;
 
             .navbar-brand {
                 flex: 1 1 auto;
@@ -1695,6 +1702,16 @@ html.menu-opened body {
                     color: var(--primary);
                 }
             }
+        }
+    }
+
+    header.header-three:not(.fixed) .navbar-header #mobile_btn {
+        color: var(--white);
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, 0.14);
+            color: var(--white);
         }
     }
 

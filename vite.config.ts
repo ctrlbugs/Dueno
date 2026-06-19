@@ -31,17 +31,25 @@ const contactApiDevPlugin = (env: Record<string, string>): Plugin => ({
   name: "contact-api-dev",
   configureServer(server) {
     server.middlewares.use(async (req, res, next) => {
-      if (req.url !== "/api/contact") {
+      if (req.url !== "/api/contact" && req.url !== "/api/newsletter") {
         next();
         return;
       }
 
       applySmtpEnv(env);
 
-      const { handleContactRequest } = await import(
-        "./server/contact/handler.mjs"
+      if (req.url === "/api/contact") {
+        const { handleContactRequest } = await import(
+          "./server/contact/handler.mjs"
+        );
+        await handleContactRequest(req, res);
+        return;
+      }
+
+      const { handleNewsletterRequest } = await import(
+        "./server/newsletter/handler.mjs"
       );
-      await handleContactRequest(req, res);
+      await handleNewsletterRequest(req, res);
     });
   },
 });

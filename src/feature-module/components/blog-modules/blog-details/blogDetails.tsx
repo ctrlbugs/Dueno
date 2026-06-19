@@ -9,6 +9,7 @@ import { usePropertyNews } from "../../../../hooks/usePropertyNews";
 import {
   formatNewsDate,
   getArticleById,
+  getArticleImageExclusions,
   getGalleryImages,
   getRelatedArticles,
   isExternalNewsUrl,
@@ -88,7 +89,7 @@ const BlogDetails = () => {
 
   const galleryImages = getGalleryImages(article, articles, 4);
   const relatedArticles = getRelatedArticles(articles, article.id);
-  const relatedImageUrls = relatedArticles.map((item) => item.imageUrl);
+  const relatedImageContext = [article, ...relatedArticles];
   const authorLabel = article.sourceName ?? "Dueno Property";
 
   return (
@@ -166,7 +167,10 @@ const BlogDetails = () => {
                               slot={index + 1}
                               category={article.category}
                               description={article.description}
-                              excludeUrls={[article.imageUrl]}
+                              excludeUrls={[
+                                article.imageUrl,
+                                ...galleryImages.filter((_, imageIndex) => imageIndex !== index),
+                              ]}
                             />
                           </div>
                         ))}
@@ -233,12 +237,10 @@ const BlogDetails = () => {
                           article={related}
                           variant="carousel"
                           imageSlot={index + 2}
-                          excludeImageUrls={[
-                            article.imageUrl,
-                            ...relatedImageUrls.filter(
-                              (url) => url !== related.imageUrl,
-                            ),
-                          ]}
+                          excludeImageUrls={getArticleImageExclusions(
+                            relatedImageContext,
+                            index + 1,
+                          )}
                         />
                       </div>
                     ))}

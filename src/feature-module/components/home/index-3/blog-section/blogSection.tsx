@@ -3,6 +3,7 @@ import { all_routes } from "../../../../routes/all_routes";
 import { usePropertyNews } from "../../../../../hooks/usePropertyNews";
 import {
   formatNewsDate,
+  getArticleImageExclusions,
   getHomepageArticles,
 } from "../../../../../services/propertyNewsService";
 import { NewsArticleLink } from "../../../../../core/common/news/NewsArticleCard";
@@ -11,7 +12,6 @@ import { NewsImage } from "../../../../../core/common/news/NewsImage";
 const BlogSection = () => {
   const { articles } = usePropertyNews();
   const homepageArticles = getHomepageArticles(articles);
-  const homepageImageUrls = homepageArticles.map((item) => item.imageUrl);
   const [featured, ...sideArticles] = homepageArticles;
 
   if (!featured) {
@@ -45,9 +45,7 @@ const BlogSection = () => {
                       slot={0}
                       category={featured.category}
                       description={featured.description}
-                      excludeUrls={homepageImageUrls.filter(
-                        (url) => url !== featured.imageUrl,
-                      )}
+                      excludeUrls={getArticleImageExclusions(homepageArticles, 0)}
                     />
                   </NewsArticleLink>
                   <span className="badge bg-secondary badge-top">
@@ -85,8 +83,9 @@ const BlogSection = () => {
                               slot={index + 1}
                               category={article.category}
                               description={article.description}
-                              excludeUrls={homepageImageUrls.filter(
-                                (url) => url !== article.imageUrl,
+                              excludeUrls={getArticleImageExclusions(
+                                homepageArticles,
+                                index + 1,
                               )}
                             />
                           </NewsArticleLink>

@@ -107,7 +107,14 @@ export default function SiteMeta() {
       <meta name="twitter:image:alt" content={`${SITE_NAME} logo on black background`} />
 
       <meta name="theme-color" content="#000000" />
-      {noIndex ? <meta name="robots" content="noindex, nofollow" /> : null}
+      <link rel="icon" href="/assets/img/favicon.png" type="image/png" />
+      <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png" />
+      <link rel="apple-touch-icon" href="/assets/img/favicon.png" />
+      {noIndex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+      )}
       <link rel="image_src" href={meta.image} />
       <meta itemProp="name" content={meta.title} />
       <meta itemProp="description" content={meta.description} />

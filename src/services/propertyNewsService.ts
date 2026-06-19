@@ -14,9 +14,9 @@ import type {
   PropertyNewsSource,
 } from "../types/propertyNews";
 
-const CACHE_KEY = "dueno_property_news_v7";
-const LIVE_IMAGE_CACHE_KEY = "dueno_live_news_images_v1";
-const CACHE_VERSION = 7 as const;
+const CACHE_KEY = "dueno_property_news_v8";
+const LIVE_IMAGE_CACHE_KEY = "dueno_live_news_images_v2";
+const CACHE_VERSION = 8 as const;
 export const HOME_NEWS_COUNT = 3;
 const FETCH_POOL_SIZE = 12;
 const FETCH_REQUEST_SIZE = 24;
@@ -404,6 +404,36 @@ const getContextualImageCandidates = (
   );
 };
 
+const getDailyRotationOffset = () =>
+  Math.floor(Date.now() / (24 * 60 * 60 * 1000)) % 997;
+
+const pickUniqueFromPool = (
+  pool: string[],
+  used: Set<string>,
+  startIndex: number,
+): string | null => {
+  if (pool.length === 0) {
+    return null;
+  }
+
+  for (let step = 0; step < pool.length; step += 1) {
+    const candidate = pool[(startIndex + step) % pool.length];
+    if (!used.has(candidate)) {
+      return candidate;
+    }
+  }
+
+  return null;
+};
+
+const buildFallbackImagePools = (
+  article: Pick<PropertyNewsArticle, "title" | "description" | "category">,
+) => {
+  const contextual = getContextualImageCandidates(article);
+  const liveBank = readLiveImageBank();
+  return [...new Set([...contextual, ...liveBank, ...ALL_CONTEXTUAL_IMAGES])];
+};
+
 export const getContextualArticleImage = (
   article: Pick<PropertyNewsArticle, "title" | "description" | "category" | "imageUrl">,
   exclude: Set<string> = new Set(),
@@ -417,22 +447,25 @@ export const getContextualArticleImage = (
     return article.imageUrl;
   }
 
-  const candidates = getContextualImageCandidates(article);
-  const seed = hashNumber(`${article.title}-${article.category}`);
+  const rotation = getDailyRotationOffset();
+  const startIndex = rotation + slot + hashNumber(article.title);
+  const pools = buildFallbackImagePools(article);
 
-  for (let offset = 0; offset < candidates.length; offset += 1) {
-    const candidate = candidates[(seed + slot + offset) % candidates.length];
-    if (!exclude.has(candidate)) {
-      return candidate;
-    }
+  const picked = pickUniqueFromPool(
+    pools.filter((url) => !exclude.has(url)),
+    exclude,
+    startIndex,
+  );
+  if (picked) {
+    return picked;
   }
 
   const fallbackPool = ALL_CONTEXTUAL_IMAGES.filter((url) => !exclude.has(url));
   if (fallbackPool.length > 0) {
-    return fallbackPool[(seed + slot) % fallbackPool.length];
+    return fallbackPool[(startIndex + slot) % fallbackPool.length];
   }
 
-  return REMOTE_STOCK_IMAGES[slot % REMOTE_STOCK_IMAGES.length];
+  return REMOTE_STOCK_IMAGES[(startIndex + slot) % REMOTE_STOCK_IMAGES.length];
 };
 
 const readLiveImageBank = (): string[] => {
@@ -473,7 +506,7 @@ const persistLiveImageBank = (urls: string[]) => {
 
   const merged = [...new Set([...incoming, ...readLiveImageBank()])].slice(
     0,
-    48,
+    96,
   );
   window.localStorage.setItem(LIVE_IMAGE_CACHE_KEY, JSON.stringify(merged));
 };
@@ -499,9 +532,36 @@ const assignUniqueArticleImages = (
   articles: PropertyNewsArticle[],
 ): PropertyNewsArticle[] => {
   const used = new Set<string>();
+  const rotation = getDailyRotationOffset();
 
   return articles.map((article, index) => {
-    const imageUrl = getContextualArticleImage(article, used, index);
+    const startIndex = rotation + index;
+
+    if (
+      isRemoteImageUrl(article.imageUrl) &&
+      isTrustedArticleImage(article.imageUrl, article.title, article.description) &&
+      !used.has(article.imageUrl)
+    ) {
+      used.add(article.imageUrl);
+      return article;
+    }
+
+    const liveCandidate = pickUniqueFromPool(
+      readLiveImageBank().filter((url) => !used.has(url)),
+      used,
+      startIndex,
+    );
+    if (liveCandidate) {
+      used.add(liveCandidate);
+      return { ...article, imageUrl: liveCandidate };
+    }
+
+    const contextualPools = buildFallbackImagePools(article);
+    const fallback = pickUniqueFromPool(contextualPools, used, startIndex);
+    const imageUrl =
+      fallback ??
+      getContextualArticleImage(article, used, index);
+
     used.add(imageUrl);
     return {
       ...article,
@@ -509,6 +569,16 @@ const assignUniqueArticleImages = (
     };
   });
 };
+
+/** URLs already assigned to other articles on the same page. */
+export const getArticleImageExclusions = (
+  articles: PropertyNewsArticle[],
+  currentIndex: number,
+) =>
+  articles
+    .filter((_, index) => index !== currentIndex)
+    .map((article) => article.imageUrl)
+    .filter(isRemoteImageUrl);
 
 const buildArticle = (
   input: Omit<PropertyNewsArticle, "id" | "category"> & { id?: string },
@@ -604,6 +674,17 @@ const finalizePool = (articles: PropertyNewsArticle[]) => {
   }));
 
   const ranked = rankArticlesByRelevance(categorized);
+
+  const apiImages = ranked
+    .map((article) => article.imageUrl)
+    .filter(
+      (url) =>
+        isRemoteImageUrl(url) &&
+        !LOGO_IMAGE_URL_KEYWORDS.some((keyword) =>
+          url.toLowerCase().includes(keyword),
+        ),
+    );
+  persistLiveImageBank(apiImages);
 
   return assignUniqueArticleImages(ranked);
 };

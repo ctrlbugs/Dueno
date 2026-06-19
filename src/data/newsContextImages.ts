@@ -4,24 +4,32 @@ export const PROPERTY_SALES_IMAGES = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1605276374104-de8862ebb770?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const RENTING_IMAGES = [
   "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1522708323590-d24dbb726b69?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const INVEST_IMAGES = [
-  "https://images.unsplash.com/photo-1605276374104-de8862ebb770?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1560520653-9dbf0ef4eb58?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1600047509807-ba8f99d2cd7a?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const MORTGAGE_IMAGES = [
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const MARKET_NEWS_IMAGES = [
@@ -29,20 +37,24 @@ export const MARKET_NEWS_IMAGES = [
   "https://images.unsplash.com/photo-1611348586804-61bf6c080040?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1577230655745-f82395f41739?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const NIGERIA_AFRICA_IMAGES = [
-  "https://images.unsplash.com/photo-1611348586804-61bf6c080040?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1577230655745-f82395f41739?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1548767797-d8c207163042?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1600047509807-ba8f99d2cd7a?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const SECURITY_GOV_IMAGES = [
-  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1577230655745-f82395f41739?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1611348586804-61bf6c080040?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export const CATEGORY_IMAGE_POOLS: Record<string, string[]> = {

@@ -1,6 +1,7 @@
 import Breadcrumb from "../../../../core/common/Breadcrumb/breadcrumb";
 import { NewsArticleCard } from "../../../../core/common/news/NewsArticleCard";
 import { usePropertyNews } from "../../../../hooks/usePropertyNews";
+import { getArticleImageExclusions } from "../../../../services/propertyNewsService";
 
 const BlogList = () => {
   const { articles } = usePropertyNews();
@@ -19,7 +20,11 @@ const BlogList = () => {
               <div className="col-md-12 col-lg-8">
                 {articles.map((article, index) => (
                   <div className="mb-4" key={article.id}>
-                    <NewsArticleCard article={article} imageSlot={index} />
+                    <NewsArticleCard
+                      article={article}
+                      imageSlot={index}
+                      excludeImageUrls={getArticleImageExclusions(articles, index)}
+                    />
                   </div>
                 ))}
               </div>

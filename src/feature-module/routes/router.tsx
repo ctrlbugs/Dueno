@@ -1,6 +1,7 @@
 
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router";
+import ScrollToTop from "../../core/common/ScrollToTop";
 import { authRoutes, publicRoutes} from "./router.link";
 import AuthFeature from "../feathure-components/authFeature";
 import Feature from "../feathure-components/feature";
@@ -11,6 +12,7 @@ const AgentApp = lazy(() => import("../../agent/AgentApp"));
 const ALLRoutes: React.FC = () => {
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route
           path="/admin/*"

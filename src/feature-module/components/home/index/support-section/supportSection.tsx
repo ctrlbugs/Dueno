@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import NewsletterSubscribeForm from "../../../../../shared/components/NewsletterSubscribeForm";
 
 const SupportSection = () => {
   return (
@@ -30,21 +30,7 @@ const SupportSection = () => {
               data-aos="fade-down"
               data-aos-duration={1500}
             >
-              <div className="d-flex align-items-center justify-content-between gap-2">
-                <div className="position-relative support-custom-icons">
-                  <div className="input-group input-group-flat">
-                    <input
-                      type="text"
-                      className="form-control bg-white w-100"
-                      placeholder="Enter Email Address"
-                    />
-                  </div>
-                  <i className="material-icons-outlined text-dark z-2">email</i>
-                </div>
-                <Link to="#" className="btn btn-lg btn-primary">
-                  Subscribe
-                </Link>
-              </div>
+              <NewsletterSubscribeForm variant="support" source="support" />
             </div>
             {/* end col */}
           </div>

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /agent/
+Disallow: /signin
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+
+Sitemap: https://duenoproperty.com/sitemap.xml

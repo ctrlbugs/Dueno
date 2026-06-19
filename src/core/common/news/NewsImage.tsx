@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getContextualArticleImage,
   isRemoteImageUrl,
-  isTrustedArticleImage,
 } from "../../../services/propertyNewsService";
 
 type NewsImageProps = {
@@ -35,15 +34,12 @@ export const NewsImage = ({
   );
 
   const resolvedSrc = useMemo(() => {
-    if (
-      isRemoteImageUrl(src) &&
-      isTrustedArticleImage(src, alt, description || alt)
-    ) {
+    if (isRemoteImageUrl(src)) {
       return src;
     }
 
     return getContextualArticleImage(articleContext, new Set(excludeUrls), slot);
-  }, [alt, articleContext, description, excludeUrls, slot, src]);
+  }, [articleContext, excludeUrls, slot, src]);
 
   const [currentSrc, setCurrentSrc] = useState(resolvedSrc);
   const [attempt, setAttempt] = useState(0);
