@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://duenoproperty.com";
+import { DEFAULT_SITE_URL, sanitizeSiteUrl } from "../utils/siteUrl";
 
 export const SITE_NAME = "Dueno Property";
 
@@ -26,8 +26,7 @@ export const SITE_OG_IMAGE_PATH = "/assets/img/og/dueno-og.png";
 export const SITE_LOGO_WHITE_PATH = "/assets/img/logo-white.svg";
 
 export const getSiteUrl = () =>
-  (import.meta.env.VITE_SITE_URL as string | undefined)?.replace(/\/$/, "") ||
-  DEFAULT_SITE_URL;
+  sanitizeSiteUrl(import.meta.env.VITE_SITE_URL as string | undefined);
 
 export const getAbsoluteUrl = (path = "") => {
   const base = getSiteUrl();

@@ -66,9 +66,7 @@ const buildSeedListing = (
   };
 };
 
-export const getDevPublishedListings = (): EstateProperty[] => {
-  if (!isDevSeedEnabled()) return [];
-
+export const getPublicPublishedListings = (): EstateProperty[] => {
   const lagosSaleImages = [
     estateImagePath("Ikate Chisco", "1.jpeg"),
     estateImagePath("Ikate Chisco", "2.jpeg"),
@@ -130,4 +128,9 @@ export const getDevPublishedListings = (): EstateProperty[] => {
       badgeClass: "bg-pink",
     }),
   ];
+};
+
+export const getDevPublishedListings = (): EstateProperty[] => {
+  if (!isDevSeedEnabled()) return [];
+  return getPublicPublishedListings();
 };

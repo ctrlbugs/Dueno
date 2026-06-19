@@ -1,7 +1,12 @@
-const SITE_URL =
-  process.env.VITE_SITE_URL?.trim() ||
-  process.env.SITE_URL?.trim() ||
-  "https://duenoproperty.com";
+const sanitizeSiteUrl = (raw) => {
+  const fallback = "https://duenoproperty.com";
+  const cleaned = (raw ?? fallback).trim().replace(/[\r\n\t]/g, "");
+  return cleaned.replace(/\/$/, "");
+};
+
+const SITE_URL = sanitizeSiteUrl(
+  process.env.VITE_SITE_URL || process.env.SITE_URL,
+);
 
 const BRAND = {
   teal: "#00ABA9",

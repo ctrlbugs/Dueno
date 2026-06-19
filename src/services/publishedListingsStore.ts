@@ -1,6 +1,7 @@
 import type { EstateProperty } from "../data/estateProperties";
 import {
   getDevPublishedListings,
+  getPublicPublishedListings,
 } from "../config/devPublishedListings";
 
 const STORAGE_KEY = "_DUENO_PUBLISHED_LISTINGS";
@@ -11,14 +12,21 @@ const writePublished = (listings: EstateProperty[]) => {
   window.dispatchEvent(new CustomEvent("dueno-published-updated"));
 };
 
-const mergeDevSeedPublished = (listings: EstateProperty[]): EstateProperty[] => {
-  const seeds = getDevPublishedListings();
-  if (seeds.length === 0) return listings;
+const mergeSeedPublished = (listings: EstateProperty[]): EstateProperty[] => {
+  const seedIds = new Set<string>();
+  const allSeeds = [...getPublicPublishedListings(), ...getDevPublishedListings()].filter(
+    (seed) => {
+      if (seedIds.has(seed.id)) return false;
+      seedIds.add(seed.id);
+      return true;
+    },
+  );
+  if (allSeeds.length === 0) return listings;
 
   let changed = false;
   const merged = [...listings];
 
-  for (const seed of seeds) {
+  for (const seed of allSeeds) {
     if (!merged.some((listing) => listing.id === seed.id)) {
       merged.push(seed);
       changed = true;
@@ -31,6 +39,8 @@ const mergeDevSeedPublished = (listings: EstateProperty[]): EstateProperty[] => 
 
   return merged;
 };
+
+const mergeDevSeedPublished = mergeSeedPublished;
 
 const readPublished = (): EstateProperty[] => {
   const raw = localStorage.getItem(STORAGE_KEY);

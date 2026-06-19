@@ -1,9 +1,45 @@
 import { getDevSeedAgents } from "../config/devAccounts";
+import { getPublicAgents, PUBLIC_AGENT_IDS } from "../config/publicAgents";
 import type { AgentStatus, AgentUser } from "../types/user";
 
 const STORAGE_KEY = "_DUENO_AGENTS";
 
-const seedAgents = (): AgentUser[] => getDevSeedAgents();
+const mergePublicAgents = (agents: AgentUser[]): AgentUser[] => {
+  const seeds = getPublicAgents();
+  if (seeds.length === 0) return agents;
+
+  let changed = false;
+  const merged = [...agents];
+
+  for (const seed of seeds) {
+    const index = merged.findIndex((agent) => agent.id === seed.id);
+    if (index === -1) {
+      merged.push(seed);
+      changed = true;
+      continue;
+    }
+
+    if (!PUBLIC_AGENT_IDS.has(seed.id)) continue;
+
+    const existing = merged[index];
+    merged[index] = {
+      ...seed,
+      password: existing.password || seed.password,
+      email: existing.email || seed.email,
+      avatarDataUrl: existing.avatarDataUrl ?? seed.avatarDataUrl,
+      coverImageDataUrl: existing.coverImageDataUrl ?? seed.coverImageDataUrl,
+    };
+    changed = true;
+  }
+
+  if (changed) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+  }
+
+  return merged;
+};
+
+const seedAgents = (): AgentUser[] => mergePublicAgents(getDevSeedAgents());
 
 const DEV_SEED_AGENT_IDS = new Set(["agent-1", "agent-2", "agent-3"]);
 
@@ -40,7 +76,7 @@ const readAgents = (): AgentUser[] => {
     return seeded;
   }
   try {
-    return mergeDevSeedAgents(JSON.parse(raw) as AgentUser[]);
+    return mergeDevSeedAgents(mergePublicAgents(JSON.parse(raw) as AgentUser[]));
   } catch {
     const seeded = seedAgents();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));

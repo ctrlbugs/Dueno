@@ -94,6 +94,7 @@ export default function SiteMeta() {
       <meta property="og:description" content={meta.description} />
       <meta property="og:url" content={meta.url} />
       <meta property="og:image" content={meta.image} />
+      <meta property="og:image:secure_url" content={meta.image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={`${SITE_NAME} logo on black background`} />

@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import { sanitizeSiteUrl } from "./src/utils/siteUrl";
 
 const appendApiKey = (path: string, key: string) => {
   const separator = path.includes("?") ? "&" : "?";
@@ -48,10 +49,7 @@ const contactApiDevPlugin = (env: Record<string, string>): Plugin => ({
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const siteUrl = (env.VITE_SITE_URL || "https://duenoproperty.com").replace(
-    /\/$/,
-    "",
-  );
+  const siteUrl = sanitizeSiteUrl(env.VITE_SITE_URL);
 
   return {
     plugins: [
@@ -60,7 +58,7 @@ export default defineConfig(({ mode }) => {
       {
         name: "html-site-url",
         transformIndexHtml(html) {
-          return html.replaceAll("https://duenoproperty.com", siteUrl);
+          return html.replaceAll("__SITE_URL__", siteUrl);
         },
       },
     ],
