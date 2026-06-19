@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import ImageWithBasePath from "../../../../core/imageWithBasePath";
 import { all_routes } from "../../../routes/all_routes";
 import { useAuth } from "../../../../context/AuthContext";
@@ -8,6 +8,8 @@ type PasswordField = "password" | "confirmPassword";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnTo = (location.state as { from?: string } | null)?.from;
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +34,7 @@ const SignIn = () => {
     const redirectTo = await login(email.trim(), password);
     setLoading(false);
     if (redirectTo) {
-      navigate(redirectTo);
+      navigate(returnTo ?? redirectTo);
       return;
     }
     setError("Invalid email or password.");

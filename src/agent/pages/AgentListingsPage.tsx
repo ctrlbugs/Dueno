@@ -12,6 +12,8 @@ import {
 } from "../../services/listingQueueStore";
 import { getPropertyDetailsPath } from "../../data/estateProperties";
 import { getPublishedListingById } from "../../services/publishedListingsStore";
+import ImageWithBasePath from "../../core/imageWithBasePath";
+import { getListingThumbnailRaw } from "../../utils/listingImage";
 
 const statusLabel: Record<string, string> = {
   pending_review: "Pending Review",
@@ -102,15 +104,17 @@ const AgentListingsPage = () => {
                 ) : (
                   listings.map((listing) => {
                   const published = getPublishedListingById(listing.id);
+                  const thumbnail = getListingThumbnailRaw(listing, published);
                   return (
                     <tr key={listing.id}>
                       <td>
-                        {listing.images[0] ? (
-                          <img
-                            src={listing.images[0].dataUrl}
+                        {thumbnail ? (
+                          <ImageWithBasePath
+                            src={thumbnail}
                             alt={listing.title}
-                            className="rounded"
-                            style={{ width: 56, height: 42, objectFit: "cover" }}
+                            className="rounded agent-listing-thumb"
+                            height={42}
+                            width={56}
                           />
                         ) : (
                           <span className="text-muted">—</span>

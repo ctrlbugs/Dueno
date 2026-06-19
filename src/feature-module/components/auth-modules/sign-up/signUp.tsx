@@ -91,6 +91,8 @@ const SignUp = () => {
         createdBy: "self",
         registration: values.registration,
         avatarDataUrl: values.registration.profilePhotoDataUrl,
+        bio: values.bio,
+        socialLinks: values.socialLinks,
       });
 
       const result = login(values.email, values.password);

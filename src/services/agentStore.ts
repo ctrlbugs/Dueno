@@ -5,6 +5,33 @@ const STORAGE_KEY = "_DUENO_AGENTS";
 
 const seedAgents = (): AgentUser[] => getDevSeedAgents();
 
+const DEV_SEED_AGENT_IDS = new Set(["agent-1", "agent-2", "agent-3"]);
+
+const mergeDevSeedAgents = (agents: AgentUser[]): AgentUser[] => {
+  const seeds = getDevSeedAgents();
+  if (seeds.length === 0) return agents;
+
+  let changed = false;
+  const merged = [...agents];
+
+  for (const seed of seeds) {
+    const index = merged.findIndex((agent) => agent.id === seed.id);
+    if (index === -1) {
+      merged.push(seed);
+      changed = true;
+    } else if (DEV_SEED_AGENT_IDS.has(seed.id)) {
+      merged[index] = seed;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+  }
+
+  return merged;
+};
+
 const readAgents = (): AgentUser[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
@@ -13,7 +40,7 @@ const readAgents = (): AgentUser[] => {
     return seeded;
   }
   try {
-    return JSON.parse(raw) as AgentUser[];
+    return mergeDevSeedAgents(JSON.parse(raw) as AgentUser[]);
   } catch {
     const seeded = seedAgents();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
@@ -34,6 +61,9 @@ export const getAgentById = (id: string): AgentUser | undefined =>
 export const getAgentAvatarUrl = (agent?: AgentUser | null): string | undefined =>
   agent?.avatarDataUrl ?? agent?.registration?.profilePhotoDataUrl;
 
+export const getAgentCoverUrl = (agent?: AgentUser | null): string | undefined =>
+  agent?.coverImageDataUrl;
+
 export const getAgentByEmail = (email: string): AgentUser | undefined =>
   readAgents().find(
     (agent) => agent.email.toLowerCase() === email.toLowerCase()
@@ -50,6 +80,13 @@ export const authenticateAgent = (
 
 export const getAgentsByStatus = (status: AgentStatus): AgentUser[] =>
   readAgents().filter((agent) => agent.status === status);
+
+export const getApprovedPublicAgents = (): AgentUser[] =>
+  getAgentsByStatus("approved").sort((a, b) => {
+    const nameA = `${a.firstName} ${a.lastName}`.trim();
+    const nameB = `${b.firstName} ${b.lastName}`.trim();
+    return nameA.localeCompare(nameB);
+  });
 
 export const createAgent = (
   input: Omit<AgentUser, "id" | "createdAt" | "createdBy"> & {
@@ -79,6 +116,34 @@ export const createAgent = (
 
   writeAgents([agent, ...agents]);
   return agent;
+};
+
+export type AgentProfilePatch = Partial<
+  Pick<
+    AgentUser,
+    | "bio"
+    | "availability"
+    | "avatarDataUrl"
+    | "coverImageDataUrl"
+    | "socialLinks"
+    | "phone"
+  >
+>;
+
+export const updateAgentProfile = (
+  id: string,
+  patch: AgentProfilePatch,
+): AgentUser | undefined => {
+  const agents = readAgents();
+  const index = agents.findIndex((agent) => agent.id === id);
+  if (index === -1) return undefined;
+
+  agents[index] = {
+    ...agents[index],
+    ...patch,
+  };
+  writeAgents(agents);
+  return agents[index];
 };
 
 export const updateAgentStatus = (

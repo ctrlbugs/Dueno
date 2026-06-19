@@ -8,9 +8,27 @@ import { matchesSearchQuery } from "../../utils/searchFilter";
 import { useAuth } from "../../context/AuthContext";
 import { getAgentById } from "../../services/agentStore";
 import {
+  getAgentListingStats,
   getListingsByAgentId,
   subscribeListings,
 } from "../../services/listingQueueStore";
+import { getPublishedListingById } from "../../services/publishedListingsStore";
+import ImageWithBasePath from "../../core/imageWithBasePath";
+import { getListingThumbnailRaw } from "../../utils/listingImage";
+
+const statusLabel: Record<string, string> = {
+  pending_review: "Pending Review",
+  approved: "Published",
+  rejected: "Rejected",
+  draft: "Draft",
+};
+
+const statusBadgeClass: Record<string, string> = {
+  pending_review: "bg-warning-subtle text-warning",
+  approved: "bg-success-subtle text-success",
+  rejected: "bg-danger-subtle text-danger",
+  draft: "bg-light text-dark",
+};
 
 const AgentDashboard = () => {
   const { user } = useAuth();
@@ -21,9 +39,12 @@ const AgentDashboard = () => {
 
   const agent = user ? getAgentById(user.id) : undefined;
   const listings = user ? getListingsByAgentId(user.id) : [];
-  const pending = listings.filter((l) => l.status === "pending_review").length;
-  const approved = listings.filter((l) => l.status === "approved").length;
-  const rejected = listings.filter((l) => l.status === "rejected").length;
+  const stats = user ? getAgentListingStats(user.id) : {
+    total: 0,
+    pending: 0,
+    published: 0,
+    rejected: 0,
+  };
 
   const recentListings = [...listings]
     .filter((listing) =>
@@ -69,8 +90,8 @@ const AgentDashboard = () => {
         <Col xxl={3} sm={6}>
           <StatCard
             title="Total Listings"
-            value={listings.length}
-            change={`${approved} live`}
+            value={stats.total}
+            change={`${stats.published} live`}
             icon="ri-building-4-line"
             variant="text-bg-primary"
           />
@@ -78,7 +99,7 @@ const AgentDashboard = () => {
         <Col xxl={3} sm={6}>
           <StatCard
             title="Pending Review"
-            value={pending}
+            value={stats.pending}
             change="Awaiting admin"
             icon="ri-time-line"
             variant="text-bg-warning"
@@ -87,7 +108,7 @@ const AgentDashboard = () => {
         <Col xxl={3} sm={6}>
           <StatCard
             title="Published"
-            value={approved}
+            value={stats.published}
             change="On Dueno"
             icon="ri-checkbox-circle-line"
             variant="text-bg-success"
@@ -96,7 +117,7 @@ const AgentDashboard = () => {
         <Col xxl={3} sm={6}>
           <StatCard
             title="Rejected"
-            value={rejected}
+            value={stats.rejected}
             change="Needs revision"
             icon="ri-close-circle-line"
             variant="text-bg-purple"
@@ -125,34 +146,42 @@ const AgentDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentListings.map((listing) => (
+                    {recentListings.map((listing) => {
+                      const published = getPublishedListingById(listing.id);
+                      const thumbnail = getListingThumbnailRaw(listing, published);
+
+                      return (
                       <tr key={listing.id}>
                         <td>
                           <div className="d-flex align-items-center gap-2">
-                            {listing.images[0] && (
-                              <img
-                                src={listing.images[0].dataUrl}
+                            {thumbnail ? (
+                              <ImageWithBasePath
+                                src={thumbnail}
                                 alt=""
-                                className="rounded"
-                                style={{
-                                  width: 40,
-                                  height: 32,
-                                  objectFit: "cover",
-                                }}
+                                className="rounded agent-listing-thumb agent-listing-thumb--sm"
+                                height={32}
+                                width={40}
                               />
-                            )}
+                            ) : null}
                             <span className="fw-semibold">{listing.title}</span>
                           </div>
                         </td>
                         <td className="text-capitalize">{listing.listingType}</td>
                         <td>{listing.price}</td>
                         <td>
-                          <span className="badge bg-light text-dark text-capitalize">
-                            {listing.status.replace("_", " ")}
+                          <span
+                            className={`badge text-capitalize ${
+                              statusBadgeClass[listing.status] ??
+                              "bg-light text-dark"
+                            }`}
+                          >
+                            {statusLabel[listing.status] ??
+                              listing.status.replace("_", " ")}
                           </span>
                         </td>
                       </tr>
-                    ))}
+                    );
+                    })}
                   </tbody>
                 </Table>
               </div>

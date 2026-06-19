@@ -7,6 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import AdminPageBreadcrumb from "../components/AdminPageBreadcrumb";
 import { createAgent } from "../services/agentStore";
 import type { AgentStatus } from "../types";
+import {
+  AGENT_SOCIAL_FIELDS,
+  normalizeSocialLinks,
+} from "../../types/agentSocial";
 
 type CreateAgentForm = {
   firstName: string;
@@ -20,6 +24,13 @@ type CreateAgentForm = {
   state: string;
   status: AgentStatus;
   notes: string;
+  bio: string;
+  socialX: string;
+  socialInstagram: string;
+  socialLinkedin: string;
+  socialTiktok: string;
+  socialFacebook: string;
+  socialYoutube: string;
 };
 
 const NIGERIAN_STATES = [
@@ -83,6 +94,13 @@ const schema = yup.object({
     .oneOf(["pending_review", "approved", "rejected", "suspended"])
     .required(),
   notes: yup.string().default(""),
+  bio: yup.string().default(""),
+  socialX: yup.string().default(""),
+  socialInstagram: yup.string().default(""),
+  socialLinkedin: yup.string().default(""),
+  socialTiktok: yup.string().default(""),
+  socialFacebook: yup.string().default(""),
+  socialYoutube: yup.string().default(""),
 });
 
 const CreateAgentPage = () => {
@@ -109,6 +127,13 @@ const CreateAgentPage = () => {
       state: "Lagos",
       status: "approved",
       notes: "",
+      bio: "",
+      socialX: "",
+      socialInstagram: "",
+      socialLinkedin: "",
+      socialTiktok: "",
+      socialFacebook: "",
+      socialYoutube: "",
     },
   });
 
@@ -116,9 +141,29 @@ const CreateAgentPage = () => {
     setError(null);
     setSuccess(null);
     try {
+      const {
+        bio,
+        socialX,
+        socialInstagram,
+        socialLinkedin,
+        socialTiktok,
+        socialFacebook,
+        socialYoutube,
+        ...agentValues
+      } = values;
+
       const agent = createAgent({
-        ...values,
+        ...agentValues,
         createdBy: "admin",
+        bio: bio.trim() || undefined,
+        socialLinks: normalizeSocialLinks({
+          x: socialX,
+          instagram: socialInstagram,
+          linkedin: socialLinkedin,
+          tiktok: socialTiktok,
+          facebook: socialFacebook,
+          youtube: socialYoutube,
+        }),
       });
       setSuccess(
         `Agent account created for ${agent.firstName} ${agent.lastName}. They can sign in with ${agent.email}.`
@@ -304,6 +349,43 @@ const CreateAgentPage = () => {
                     placeholder="Compliance notes, referral source, etc."
                   />
                 </Form.Group>
+
+                <Form.Group className="mb-4">
+                  <Form.Label>Public bio (optional)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    {...register("bio")}
+                    placeholder="Shown on the agent list and public profile."
+                  />
+                </Form.Group>
+
+                <h5 className="mb-3">Social profiles (optional)</h5>
+                <Row>
+                  {AGENT_SOCIAL_FIELDS.map(({ key, label, placeholder }) => {
+                    const fieldName = {
+                      x: "socialX",
+                      instagram: "socialInstagram",
+                      linkedin: "socialLinkedin",
+                      tiktok: "socialTiktok",
+                      facebook: "socialFacebook",
+                      youtube: "socialYoutube",
+                    }[key] as keyof CreateAgentForm;
+
+                    return (
+                      <Col md={6} key={key}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>{label}</Form.Label>
+                          <Form.Control
+                            type="url"
+                            {...register(fieldName)}
+                            placeholder={placeholder}
+                          />
+                        </Form.Group>
+                      </Col>
+                    );
+                  })}
+                </Row>
 
                 <div className="d-flex gap-2">
                   <Button type="submit" variant="primary" disabled={isSubmitting}>

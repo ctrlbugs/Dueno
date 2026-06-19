@@ -47,6 +47,8 @@ export const getDevSeedAgents = (): AgentUser[] => {
   const pendingPassword = read("VITE_DEV_AGENT_PENDING_PASSWORD");
   const approvedEmail = read("VITE_DEV_AGENT_APPROVED_EMAIL");
   const approvedPassword = read("VITE_DEV_AGENT_APPROVED_PASSWORD");
+  const sammyEmail = read("VITE_DEV_AGENT_SAMMY_EMAIL");
+  const sammyPassword = read("VITE_DEV_AGENT_SAMMY_PASSWORD");
 
   const agents: AgentUser[] = [];
 
@@ -84,7 +86,81 @@ export const getDevSeedAgents = (): AgentUser[] => {
       createdAt: new Date(Date.now() - 86400000 * 30).toISOString(),
       createdBy: "self",
       trustScore: 92,
+      availability: "away",
       bio: "Licensed NIESV agent specialising in Abuja luxury homes.",
+      socialLinks: {
+        x: "https://x.com/duenoproperty",
+        instagram: "https://instagram.com/duenoproperty",
+        linkedin: "https://linkedin.com/company/duenoproperty",
+      },
+      registration: {
+        dateOfBirth: "1990-01-01",
+        nationality: "Nigerian",
+        residentialAddress: "Asokoro, Abuja",
+        lga: "Abuja Municipal",
+        idDocumentType: "nin",
+        agentType: "individual",
+        yearsOfExperience: 8,
+        areasOfOperation: ["Abuja", "Lagos"],
+        propertyCategories: ["Residential", "Luxury Properties"],
+        isLicensedPractitioner: true,
+        professionalMemberships: [
+          "Nigerian Institution of Estate Surveyors and Valuers (NIESV)",
+        ],
+        bankAccountName: "Emeka Nwosu",
+        bankAccountNumber: "0123456789",
+        bankName: "Access Bank",
+        certifiedAccurateAt: new Date().toISOString(),
+        termsAcceptedAt: new Date().toISOString(),
+        privacyAcceptedAt: new Date().toISOString(),
+      },
+    });
+  }
+
+  if (sammyEmail && sammyPassword) {
+    agents.push({
+      id: "agent-3",
+      firstName: "Sammy",
+      lastName: "Akindele",
+      email: sammyEmail,
+      phone: "+2348034567890",
+      password: sammyPassword,
+      agencyName: "Dueno Property",
+      licenseNumber: "NIESV-2024-014",
+      city: "Lagos",
+      state: "Lagos",
+      status: "approved",
+      createdAt: new Date(Date.now() - 86400000 * 14).toISOString(),
+      createdBy: "admin",
+      trustScore: 88,
+      availability: "available",
+      bio: "Experienced Lagos property agent helping clients buy, sell, and rent verified homes across the city.",
+      socialLinks: {
+        instagram: "https://instagram.com/duenoproperty",
+        linkedin: "https://linkedin.com/company/duenoproperty",
+        facebook: "https://facebook.com/duenoproperty",
+      },
+      registration: {
+        dateOfBirth: "1988-06-15",
+        nationality: "Nigerian",
+        residentialAddress: "Victoria Island, Lagos",
+        lga: "Eti-Osa",
+        idDocumentType: "nin",
+        agentType: "individual",
+        yearsOfExperience: 6,
+        areasOfOperation: ["Lagos"],
+        propertyCategories: ["Residential", "Commercial"],
+        isLicensedPractitioner: true,
+        professionalMemberships: [
+          "Nigerian Institution of Estate Surveyors and Valuers (NIESV)",
+        ],
+        bankAccountName: "Sammy Akindele",
+        bankAccountNumber: "0987654321",
+        bankName: "GTBank",
+        certifiedAccurateAt: new Date().toISOString(),
+        termsAcceptedAt: new Date().toISOString(),
+        privacyAcceptedAt: new Date().toISOString(),
+      },
     });
   }
 
@@ -112,3 +188,6 @@ export const getDevSeedBuyers = (): BuyerUser[] => {
 
 export const getDevApprovedAgentEmail = () =>
   read("VITE_DEV_AGENT_APPROVED_EMAIL");
+
+export const getDevSammyAgentEmail = () =>
+  read("VITE_DEV_AGENT_SAMMY_EMAIL");

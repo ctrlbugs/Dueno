@@ -1,5 +1,7 @@
-/** Contact form side image — upload to public/assets/img/contact-us/ */
-export const CONTACT_FORM_IMAGE = "assets/img/contact-us/contact-us-img-02.jpg";
+import { DUENO_SERVICES } from "./duenoServices";
+
+/** Contact form side image — public/assets/img/services/contact-us.jpg */
+export const CONTACT_FORM_IMAGE = "assets/img/services/contact-us.jpg";
 
 export const SITE_CONTACT = {
   name: "Dueno Property",
@@ -23,3 +25,16 @@ export const getSiteContactMapEmbedUrl = () =>
   `https://maps.google.com/maps?q=${encodeURIComponent(
     SITE_CONTACT.location.mapQuery,
   )}&hl=en&z=14&output=embed`;
+
+export const CONTACT_CATEGORIES = [
+  { value: "Select", label: "Select category" },
+  ...DUENO_SERVICES.map((service) => ({
+    value: service.title,
+    label: service.title,
+  })),
+  { value: "Other", label: "Other" },
+] as const;
+
+export const CONTACT_CATEGORY_VALUES = CONTACT_CATEGORIES.filter(
+  (item) => item.value !== "Select",
+).map((item) => item.value);

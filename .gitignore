@@ -23,3 +23,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
+
+# Local planning docs (not for repo)
+docs/BACKEND_PLAN.md
+docs/STORE_MIGRATION.md

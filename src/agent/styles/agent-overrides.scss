@@ -1,3 +1,5 @@
+@import "../../shared/styles/statCard.scss";
+
 .agent-app {
   --tz-logo-lg-height: 46px;
   --tz-logo-sm-height: 34px;
@@ -20,6 +22,12 @@
   .agent-sidebar-badge .badge {
     font-weight: 500;
     letter-spacing: 0.02em;
+    color: #b7dba3;
+    background: rgba(183, 219, 163, 0.12) !important;
+
+    i {
+      color: #b7dba3;
+    }
   }
 
   .navbar-custom {
@@ -181,6 +189,19 @@
     font-weight: 700;
     line-height: 18px;
     text-align: center;
+  }
+
+  .agent-listing-thumb {
+    width: 56px;
+    height: 42px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+
+    &--sm {
+      width: 40px;
+      height: 32px;
+    }
   }
 }
 

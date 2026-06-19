@@ -1,0 +1,1 @@
+const n=(t,e)=>{const a=t.images.find(r=>r.dataUrl?.trim())?.dataUrl??t.images[0]?.dataUrl;if(a?.trim())return a.trim();const i=e?.cardImage?.trim();return i||e?.images.find(r=>r?.trim())?.trim()};export{n as g};

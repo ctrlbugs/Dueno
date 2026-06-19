@@ -18,6 +18,9 @@ const AgentListingsPage = lazy(() => import("./pages/AgentListingsPage"));
 const AgentNewListingPage = lazy(() => import("./pages/AgentNewListingPage"));
 const AgentPendingPage = lazy(() => import("./pages/AgentPendingPage"));
 const AgentMessagesPage = lazy(() => import("./pages/AgentMessagesPage"));
+const AgentProfileSettingsPage = lazy(
+  () => import("./pages/AgentProfileSettingsPage"),
+);
 
 const AgentProtectedRoutes = () => (
   <AgentSearchProvider>
@@ -35,6 +38,7 @@ const AgentRoutes = () => (
         <Route path="dashboard" element={<AgentDashboard />} />
         <Route path="listings" element={<AgentListingsPage />} />
         <Route path="listings/new" element={<AgentNewListingPage />} />
+        <Route path="profile" element={<AgentProfileSettingsPage />} />
         <Route path="messages" element={<AgentMessagesPage />} />
       </Route>
       <Route path="*" element={<AgentIndexRedirect />} />

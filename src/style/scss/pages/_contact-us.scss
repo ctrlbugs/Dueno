@@ -78,7 +78,7 @@
     display: flex;
     align-items: stretch;
     border-radius: 0;
-    overflow: hidden;
+    overflow: visible;
     background: var(--white);
     box-shadow: 0 8px 40px rgba(15, 23, 42, 0.08);
     border: 1px solid rgba(15, 23, 42, 0.06);
@@ -93,6 +93,7 @@
         min-height: 100%;
         position: relative;
         background: var(--light);
+        overflow: hidden;
 
         @include respond-below(lg) {
             flex: none;
@@ -131,6 +132,106 @@
         &:hover {
             background: var(--primary);
             border-color: var(--primary);
+        }
+    }
+}
+
+.contact-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 168px;
+
+    &--pending {
+        pointer-events: none;
+    }
+
+    &__spinner {
+        width: 1rem;
+        height: 1rem;
+        border-width: 2px;
+        flex-shrink: 0;
+    }
+
+    &__check {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #22c55e;
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        animation: contactCheckPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+        svg {
+            width: 0.625rem;
+            height: 0.625rem;
+            display: block;
+        }
+    }
+}
+
+.contact-form-feedback {
+    width: 100%;
+    animation: contactFeedbackFadeIn 0.35s ease-out;
+
+    &--success {
+        padding: 20px 24px;
+    }
+}
+
+@keyframes contactCheckPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes contactFeedbackFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contact-category-select {
+    .react-select__menu-list {
+        overflow-y: auto !important;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(15, 23, 42, 0.28) transparent;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(15, 23, 42, 0.22);
+            border-radius: 999px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgba(15, 23, 42, 0.35);
+        }
+    }
+
+    @include respond-below(md) {
+        .react-select__menu {
+            width: 100%;
         }
     }
 }

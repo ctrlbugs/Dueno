@@ -21,7 +21,22 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dashboard-ui/*": ["src/dashboard-ui/*"],
+      "@/*": ["src/dashboard-ui/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/dashboard-ui/pages",
+    "src/dashboard-ui/routes",
+    "src/dashboard-ui/components",
+    "src/dashboard-ui/Layouts/Horizontal",
+    "src/dashboard-ui/Layouts/Vertical.tsx",
+    "src/dashboard-ui/Layouts/Topbar.tsx",
+    "src/dashboard-ui/Layouts/LeftSidebar.tsx",
+    "src/dashboard-ui/Layouts/Footer.tsx"
+  ]
 }

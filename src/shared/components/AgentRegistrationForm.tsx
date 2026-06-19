@@ -9,6 +9,11 @@ import {
   type AgentRegistrationDetails,
   type IdDocumentType,
 } from "../../types/agentRegistration";
+import {
+  AGENT_SOCIAL_FIELDS,
+  normalizeSocialLinks,
+  type AgentSocialLinks,
+} from "../../types/agentSocial";
 import { all_routes } from "../../feature-module/routes/all_routes";
 
 const NIGERIAN_STATES = [
@@ -50,6 +55,8 @@ export type AgentRegistrationSubmit = {
   city: string;
   state: string;
   registration: AgentRegistrationDetails;
+  bio?: string;
+  socialLinks?: AgentSocialLinks;
 };
 
 type Props = {
@@ -85,6 +92,13 @@ type FormState = {
   isLicensedPractitioner: boolean;
   licenseNumber: string;
   professionalMemberships: string[];
+  bio: string;
+  socialX: string;
+  socialInstagram: string;
+  socialLinkedin: string;
+  socialTiktok: string;
+  socialFacebook: string;
+  socialYoutube: string;
   bankAccountName: string;
   bankAccountNumber: string;
   bankName: string;
@@ -122,6 +136,13 @@ const initialForm = (): FormState => ({
   isLicensedPractitioner: false,
   licenseNumber: "",
   professionalMemberships: [],
+  bio: "",
+  socialX: "",
+  socialInstagram: "",
+  socialLinkedin: "",
+  socialTiktok: "",
+  socialFacebook: "",
+  socialYoutube: "",
   bankAccountName: "",
   bankAccountNumber: "",
   bankName: "Access Bank",
@@ -294,6 +315,15 @@ const AgentRegistrationForm = ({ onSubmit, loading = false, error }: Props) => {
       city: form.city.trim(),
       state: form.state,
       registration,
+      bio: form.bio.trim() || undefined,
+      socialLinks: normalizeSocialLinks({
+        x: form.socialX,
+        instagram: form.socialInstagram,
+        linkedin: form.socialLinkedin,
+        tiktok: form.socialTiktok,
+        facebook: form.socialFacebook,
+        youtube: form.socialYoutube,
+      }),
     });
   };
 
@@ -654,6 +684,47 @@ const AgentRegistrationForm = ({ onSubmit, loading = false, error }: Props) => {
                   </label>
                 </div>
               ))}
+            </div>
+          </div>
+          <div className="col-12 mb-3">
+            <label className="form-label">Short bio (optional)</label>
+            <textarea
+              className="form-control"
+              rows={3}
+              value={form.bio}
+              onChange={(e) => update("bio", e.target.value)}
+              placeholder="Tell clients about your experience, areas you cover, and how you help."
+            />
+          </div>
+          <div className="col-12 mb-3">
+            <label className="form-label">Social profiles (optional)</label>
+            <p className="text-muted fs-14 mb-3">
+              Add links to the profiles you want shown on your public agent page.
+            </p>
+            <div className="row">
+              {AGENT_SOCIAL_FIELDS.map(({ key, label, placeholder }) => {
+                const fieldKey = {
+                  x: "socialX",
+                  instagram: "socialInstagram",
+                  linkedin: "socialLinkedin",
+                  tiktok: "socialTiktok",
+                  facebook: "socialFacebook",
+                  youtube: "socialYoutube",
+                }[key] as keyof FormState;
+
+                return (
+                  <div className="col-md-6 mb-3" key={key}>
+                    <label className="form-label">{label}</label>
+                    <input
+                      type="url"
+                      className="form-control"
+                      value={String(form[fieldKey])}
+                      onChange={(e) => update(fieldKey, e.target.value)}
+                      placeholder={placeholder}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

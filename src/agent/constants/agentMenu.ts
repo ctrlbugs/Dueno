@@ -23,6 +23,12 @@ export const DUENO_AGENT_MENU: MenuItemTypes[] = [
     badge: { variant: "success", text: "New" },
   },
   {
+    key: "profile",
+    label: "Public Profile",
+    icon: "ri-user-star-line",
+    url: "/agent/profile",
+  },
+  {
     key: "messages",
     label: "Messages",
     icon: "ri-message-3-line",

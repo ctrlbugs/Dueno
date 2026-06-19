@@ -8,7 +8,10 @@ import { setDataTheme } from "../../redux/themeSettingSlice";
 import { all_routes } from "../../../feature-module/routes/all_routes";
 import { isServiceDetailPath } from "../../../data/duenoServices";
 import HeaderNotificationsDropdown from "./HeaderNotificationsDropdown";
+import HeaderAccountMenu from "./HeaderAccountMenu";
 import { useSavedPropertyCount } from "./useSavedPropertyCount";
+import { useAuth } from "../../../context/AuthContext";
+import { getAgentById } from "../../../services/agentStore";
 
 const Header = () => {
   const [subOpen, setSubopen] = useState<any>("");
@@ -28,6 +31,12 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMegaSuppressed, setServicesMegaSuppressed] = useState(false);
   const savedPropertyCount = useSavedPropertyCount();
+  const { user, logout, isAuthenticated } = useAuth();
+  const agent =
+    user?.role === "agent" ? getAgentById(user.id) : undefined;
+  const canPostProperty =
+    user?.role === "agent" && user.agentStatus === "approved";
+  const showBuyerNotifications = user?.role === "buyer";
   const toggleMobileMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     const nextOpen = !mobileMenuOpen;
@@ -39,6 +48,8 @@ const Header = () => {
     document.documentElement.classList.remove("menu-opened");
     setMobileMenuOpen(false);
     setSubopen("");
+    setSubsidebar("");
+    setSubsidebar2("");
   };
 
   const handleServiceLinkClick = (
@@ -107,8 +118,28 @@ const Header = () => {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", dataTheme);
   }, [dataTheme]);
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeMobileMenu();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileMenuOpen]);
   return (
     <>
+      {mobileMenuOpen ? (
+        <button
+          type="button"
+          className="sidebar-overlay opened"
+          aria-label="Close navigation menu"
+          onClick={closeMobileMenu}
+        />
+      ) : null}
       {/* Header Start */}
       <header
         className={
@@ -620,18 +651,49 @@ const Header = () => {
                 </div>
               </div>
               <div className="menu-login">
-                <Link
-                  to={all_routes.signin}
-                  className="btn btn-primary w-100 mb-2"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to={all_routes.signup}
-                  className="btn btn-secondary w-100"
-                >
-                  Register
-                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to={
+                        user?.role === "admin"
+                          ? "/admin"
+                          : user?.role === "agent"
+                            ? user.agentStatus === "approved"
+                              ? "/agent/dashboard"
+                              : "/agent/pending-review"
+                            : all_routes.index3
+                      }
+                      className="btn btn-primary w-100 mb-2"
+                    >
+                      My Account
+                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn-secondary w-100"
+                      onClick={() => {
+                        logout();
+                        navigate(all_routes.signin);
+                      }}
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to={all_routes.signin}
+                      className="btn btn-primary w-100 mb-2"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to={all_routes.signup}
+                      className="btn btn-secondary w-100"
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
             {location.pathname === "/index" ||
@@ -742,19 +804,39 @@ const Header = () => {
                     </Link>
                   </div>
                 </div>
-                <Link
-                  to={all_routes.signup}
-                  className="btn btn-lg btn-primary d-inline-flex align-items-center"
-                >
-                  <i className="material-icons-outlined me-1">lock</i>Sign In
-                </Link>
-                <Link
-                  to={all_routes.signin}
-                  className="btn btn-lg btn-dark d-inline-flex align-items-center"
-                >
-                  <i className="material-icons-outlined me-1">perm_identity</i>
-                  Register
-                </Link>
+                {canPostProperty ? (
+                  <Link
+                    to="/agent/listings/new"
+                    className="btn btn-lg btn-dark d-inline-flex align-items-center topbar-add"
+                  >
+                    <i className="material-icons-outlined me-1">home</i>
+                    Post Property
+                  </Link>
+                ) : null}
+                {isAuthenticated && user ? (
+                  <HeaderAccountMenu
+                    user={user}
+                    agent={agent}
+                    onLogout={logout}
+                  />
+                ) : (
+                  <>
+                    <Link
+                      to={all_routes.signin}
+                      className="btn btn-lg btn-dark d-inline-flex align-items-center"
+                    >
+                      <i className="material-icons-outlined me-1">perm_identity</i>
+                      Sign In
+                    </Link>
+                    <Link
+                      to={all_routes.signup}
+                      className="btn btn-lg btn-primary d-inline-flex align-items-center"
+                    >
+                      <i className="material-icons-outlined me-1">person_add</i>
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
             ) : (
               <div className="nav header-items">
@@ -878,7 +960,7 @@ const Header = () => {
                     </Link>
                   </div>
                 </div>
-                <HeaderNotificationsDropdown />
+                {showBuyerNotifications ? <HeaderNotificationsDropdown /> : null}
                 <Link
                   to={all_routes.cart}
                   className={`topbar-link btn btn-light topbar-cart ${
@@ -897,83 +979,39 @@ const Header = () => {
                     <span className="badge-icon bg-danger">{savedPropertyCount}</span>
                   ) : null}
                 </Link>
-                <Link
-                  to={all_routes.addpropertybuy}
-                  className="btn btn-lg btn-dark d-inline-flex align-items-center topbar-add"
-                >
-                  <i className="material-icons-outlined me-1">home</i>Post
-                  Property
-                </Link>
-                <div className="dropdown topbar-profile d-flex">
-                  <Link to="#" className="avatar" data-bs-toggle="dropdown">
-                    <ImageWithBasePath
-                      src="assets/img/users/user-06.jpg"
-                      alt="img"
-                      className="img-fluid rounded-circle"
-                    />
+                {canPostProperty ? (
+                  <Link
+                    to="/agent/listings/new"
+                    className="btn btn-lg btn-dark d-inline-flex align-items-center topbar-add"
+                  >
+                    <i className="material-icons-outlined me-1">home</i>
+                    Post Property
                   </Link>
-                  <div className="dropdown-menu dropdown-menu-end">
-                    <div className="d-flex align-items-center user-profile">
-                      <ImageWithBasePath
-                        src="assets/img/users/user-06.jpg"
-                        className="rounded-circle"
-                        width={42}
-                        height={42}
-                        alt="image"
-                      />
-                      <div className="ms-2">
-                        <h6 className="mb-1">Jafna Cremson</h6>
-                        <span className="d-block">Administrator</span>
-                      </div>
-                    </div>
-                    {/* Item*/}
-                    <Link
-                      to="#"
-                      className="dropdown-item d-inline-flex align-items-center"
-                    >
-                      <i className="material-icons-outlined me-2">
-                        person_outline
-                      </i>
-                      Profile Settings
-                    </Link>
-                    {/* Item*/}
-                    <Link
-                      to={all_routes.notification}
-                      className="dropdown-item d-inline-flex align-items-center"
-                    >
-                      <i className="material-icons-outlined me-2">
-                        notifications_none
-                      </i>
-                      Notifications
-                    </Link>
-                    {/* Item*/}
-                    <Link
-                      to="#"
-                      className="dropdown-item d-inline-flex align-items-center"
-                    >
-                      <i className="material-icons-outlined me-2">
-                        help_outline
-                      </i>
-                      Help &amp; Support
-                    </Link>
-                    {/* Item*/}
-                    <Link
-                      to="#"
-                      className="dropdown-item d-inline-flex align-items-center"
-                    >
-                      <i className="material-icons-outlined me-2">settings</i>
-                      Settings
-                    </Link>
-                    <hr className="dropdown-divider" />
+                ) : null}
+                {isAuthenticated && user ? (
+                  <HeaderAccountMenu
+                    user={user}
+                    agent={agent}
+                    onLogout={logout}
+                  />
+                ) : (
+                  <>
                     <Link
                       to={all_routes.signin}
-                      className="dropdown-item d-inline-flex align-items-center link-danger"
+                      className="btn btn-lg btn-dark d-inline-flex align-items-center"
                     >
-                      <i className="material-icons-outlined me-2">logout</i>Sign
-                      Out
+                      <i className="material-icons-outlined me-1">perm_identity</i>
+                      Sign In
                     </Link>
-                  </div>
-                </div>
+                    <Link
+                      to={all_routes.signup}
+                      className="btn btn-lg btn-primary d-inline-flex align-items-center"
+                    >
+                      <i className="material-icons-outlined me-1">person_add</i>
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
             )}
           </nav>

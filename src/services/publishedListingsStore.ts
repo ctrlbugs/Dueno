@@ -1,21 +1,47 @@
 import type { EstateProperty } from "../data/estateProperties";
+import {
+  getDevPublishedListings,
+} from "../config/devPublishedListings";
 
 const STORAGE_KEY = "_DUENO_PUBLISHED_LISTINGS";
 const DELETED_STATIC_KEY = "_DUENO_DELETED_STATIC_IDS";
 
-const readPublished = (): EstateProperty[] => {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-  try {
-    return JSON.parse(raw) as EstateProperty[];
-  } catch {
-    return [];
-  }
-};
-
 const writePublished = (listings: EstateProperty[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(listings));
   window.dispatchEvent(new CustomEvent("dueno-published-updated"));
+};
+
+const mergeDevSeedPublished = (listings: EstateProperty[]): EstateProperty[] => {
+  const seeds = getDevPublishedListings();
+  if (seeds.length === 0) return listings;
+
+  let changed = false;
+  const merged = [...listings];
+
+  for (const seed of seeds) {
+    if (!merged.some((listing) => listing.id === seed.id)) {
+      merged.push(seed);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    writePublished(merged);
+  }
+
+  return merged;
+};
+
+const readPublished = (): EstateProperty[] => {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) {
+    return mergeDevSeedPublished([]);
+  }
+  try {
+    return mergeDevSeedPublished(JSON.parse(raw) as EstateProperty[]);
+  } catch {
+    return mergeDevSeedPublished([]);
+  }
 };
 
 const readDeletedStatic = (): Set<string> => {

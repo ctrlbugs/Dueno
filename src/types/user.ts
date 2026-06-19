@@ -4,6 +4,8 @@ export type AgentStatus =
   | "rejected"
   | "suspended";
 
+export type AgentAvailability = "available" | "away";
+
 export type UserRole = "buyer" | "agent" | "admin";
 
 export type AgentUser = {
@@ -22,8 +24,11 @@ export type AgentUser = {
   createdBy: "admin" | "self";
   notes?: string;
   avatarDataUrl?: string;
+  coverImageDataUrl?: string;
   trustScore?: number;
   bio?: string;
+  availability?: AgentAvailability;
+  socialLinks?: import("./agentSocial").AgentSocialLinks;
   registration?: import("./agentRegistration").AgentRegistrationDetails;
 };
 

@@ -75,6 +75,7 @@ export const all_routes = {
   agentDashboard:'/agent/dashboard',
   agentListings:'/agent/listings',
   agentNewListing:'/agent/listings/new',
+  agentProfile:'/agent/profile',
   agentPendingReview:'/agent/pending-review',
   wishlist:'/wishlist',
   buyDetailsSchedule:'/buy-details-schedule',

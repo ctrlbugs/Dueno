@@ -1,24 +1,120 @@
-import { Link, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import ImageWithBasePath from "../../../../core/imageWithBasePath";
 import Breadcrumb from "../../../../core/common/Breadcrumb/breadcrumb";
-import { Country } from "../../../../core/common/selectOption";
-import CommonSelect from "../../../../core/common/common-select/commonSelect";
-import { getDuenoServiceBySlug } from "../../../../data/duenoServices";
 import {
+  CONTACT_CATEGORIES,
   CONTACT_FORM_IMAGE,
   getSiteContactMapEmbedUrl,
   SITE_CONTACT,
 } from "../../../../data/siteContact";
-import { useState } from "react";
+import CommonSelect from "../../../../core/common/common-select/commonSelect";
+import { getDuenoServiceBySlug } from "../../../../data/duenoServices";
+import { FormEvent, useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
+type SubmitState = "idle" | "loading" | "confirmed" | "success" | "error";
+
+const SUCCESS_MESSAGE = "Thank you — your enquiry has been sent.";
+const CHECK_DELAY_MS = 800;
+const SUCCESS_RESET_MS = 3000;
+
 const ContactUs = () => {
-  const [phone, setPhone] = useState<string | undefined>();
   const [searchParams] = useSearchParams();
   const serviceSlug = searchParams.get("service");
   const service = serviceSlug ? getDuenoServiceBySlug(serviceSlug) : undefined;
+
+  const [phone, setPhone] = useState<string | undefined>();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [category, setCategory] = useState(CONTACT_CATEGORIES[0]?.value ?? "Select");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [feedback, setFeedback] = useState("");
+
   const defaultSubject = service ? `Service request: ${service.title}` : "";
+  const defaultCategory = service?.title;
+
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+    setPhone(undefined);
+    setCategory(defaultCategory ?? CONTACT_CATEGORIES[0]?.value ?? "Select");
+    setSubject(defaultSubject);
+    setMessage("");
+    setFeedback("");
+  };
+
+  useEffect(() => {
+    if (defaultSubject) {
+      setSubject(defaultSubject);
+    }
+  }, [defaultSubject]);
+
+  useEffect(() => {
+    if (defaultCategory) {
+      setCategory(defaultCategory);
+    }
+  }, [defaultCategory]);
+
+  useEffect(() => {
+    if (submitState !== "confirmed") return;
+    const timer = window.setTimeout(() => setSubmitState("success"), CHECK_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [submitState]);
+
+  useEffect(() => {
+    if (submitState !== "success") return;
+    const timer = window.setTimeout(() => {
+      resetForm();
+      setSubmitState("idle");
+    }, SUCCESS_RESET_MS);
+    return () => window.clearTimeout(timer);
+  }, [submitState, defaultCategory, defaultSubject]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitState("loading");
+    setFeedback("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone: phone ?? "",
+          category,
+          subject: subject || defaultSubject,
+          message,
+          service: service?.title ?? "",
+          website: "",
+        }),
+      });
+
+      const data = (await response.json()) as {
+        success?: boolean;
+        error?: string;
+        message?: string;
+        referenceId?: string;
+      };
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Unable to send your enquiry.");
+      }
+
+      setSubmitState("confirmed");
+    } catch (error) {
+      setSubmitState("error");
+      setFeedback(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your enquiry. Please try again.",
+      );
+    }
+  };
 
   return (
     <>
@@ -103,66 +199,182 @@ const ContactUs = () => {
                     shortly.
                   </p>
                 )}
-                <div className="row">
-                  <div className="col-md-12">
-                    <div className="mb-3">
-                      <label className="form-label">Your Name</label>
-                      <input type="text" className="form-control" />
-                    </div>
+
+                {submitState === "success" ? (
+                  <div
+                    className="alert alert-success mb-0 contact-form-feedback contact-form-feedback--success"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <strong>{SUCCESS_MESSAGE}</strong>
                   </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Phone Number</label>
-                      <PhoneInput
-                        defaultCountry="NG"
-                        value={phone}
-                        onChange={setPhone}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Email</label>
-                      <input type="email" className="form-control" />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Country</label>
-                      <CommonSelect
-                        options={Country}
-                        className="select"
-                        defaultValue={Country[0]}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Subject</label>
+                ) : (
+                  <form onSubmit={handleSubmit} noValidate>
+                    <div className="visually-hidden" aria-hidden="true">
+                      <label htmlFor="contact-website">Website</label>
                       <input
+                        id="contact-website"
                         type="text"
-                        className="form-control"
-                        defaultValue={defaultSubject}
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
                       />
                     </div>
-                  </div>
-                  <div className="col-md-12">
-                    <div className="mb-3">
-                      <label className="form-label">Description</label>
-                      <textarea
-                        className="form-control"
-                        rows={4}
-                        placeholder="How can we help you?"
-                        defaultValue=""
-                      />
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="contact-name">
+                            Your Name
+                          </label>
+                          <input
+                            id="contact-name"
+                            type="text"
+                            className="form-control"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            autoComplete="name"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="contact-phone">
+                            Phone Number
+                          </label>
+                          <PhoneInput
+                            id="contact-phone"
+                            defaultCountry="NG"
+                            value={phone}
+                            onChange={setPhone}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="contact-email">
+                            Email
+                          </label>
+                          <input
+                            id="contact-email"
+                            type="email"
+                            className="form-control"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            autoComplete="email"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="mb-3">
+                          <label className="form-label">Category</label>
+                          <CommonSelect
+                            options={[...CONTACT_CATEGORIES]}
+                            className="select contact-category-select"
+                            maxMenuHeight={280}
+                            responsiveMenuHeight
+                            value={CONTACT_CATEGORIES.find(
+                              (item) => item.value === category,
+                            )}
+                            onChange={(option: { value: string } | null) =>
+                              setCategory(option?.value ?? "Select")
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="contact-subject">
+                            Subject
+                          </label>
+                          <input
+                            id="contact-subject"
+                            type="text"
+                            className="form-control"
+                            value={subject}
+                            onChange={(e) => setSubject(e.target.value)}
+                            placeholder={defaultSubject || "How can we help?"}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label
+                            className="form-label"
+                            htmlFor="contact-message"
+                          >
+                            Description
+                          </label>
+                          <textarea
+                            id="contact-message"
+                            className="form-control"
+                            rows={4}
+                            placeholder="How can we help you?"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                      {submitState === "error" ? (
+                        <div className="col-md-12">
+                          <div className="alert alert-danger py-2" role="alert">
+                            {feedback}
+                          </div>
+                        </div>
+                      ) : null}
+                      <div className="col-md-12">
+                        <button
+                          type="submit"
+                          className={`btn btn-lg btn-dark w-100 w-md-auto contact-form-submit${
+                            submitState === "loading" || submitState === "confirmed"
+                              ? " contact-form-submit--pending"
+                              : ""
+                          }`}
+                          disabled={
+                            submitState === "loading" || submitState === "confirmed"
+                          }
+                          aria-busy={
+                            submitState === "loading" || submitState === "confirmed"
+                          }
+                        >
+                          {submitState === "loading" ? (
+                            <span
+                              className="spinner-border contact-form-submit__spinner"
+                              role="status"
+                              aria-label="Sending enquiry"
+                            />
+                          ) : submitState === "confirmed" ? (
+                            <span
+                              className="contact-form-submit__check"
+                              role="status"
+                              aria-label="Enquiry sent"
+                            >
+                              <svg
+                                viewBox="0 0 12 12"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  d="M2.5 6L5 8.5L9.5 3.5"
+                                  stroke="currentColor"
+                                  strokeWidth="1.75"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </span>
+                          ) : (
+                            "Submit Enquiry"
+                          )}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-md-12">
-                    <Link to="#" className="btn btn-lg btn-dark w-100 w-md-auto">
-                      Submit Enquiry
-                    </Link>
-                  </div>
-                </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
