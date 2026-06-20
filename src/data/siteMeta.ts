@@ -6,7 +6,7 @@ export const SITE_DEFAULT_TITLE =
   "Dueno Property | Verified Real Estate Sales & Rentals in Nigeria";
 
 export const SITE_DEFAULT_DESCRIPTION =
-  "Browse verified property sales and rentals across Nigeria with Dueno Property. Trusted agents, transparent listings, mortgages, moving, cleaning, and artisan services — starting in Abuja.";
+  "Browse verified property sales and rentals across Nigeria with Dueno Property. Trusted agents, transparent listings, mortgages, moving, cleaning, and artisan services.";
 
 export const SITE_KEYWORDS = [
   "Dueno Property",

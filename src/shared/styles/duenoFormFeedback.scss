@@ -1,0 +1,181 @@
+@keyframes dueno-submit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dueno-status-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dueno-status-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.dueno-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 148px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+
+  &:disabled {
+    opacity: 0.88;
+    cursor: wait;
+  }
+
+  &--primary {
+    background: var(--primary, #00aba9);
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: #009391;
+    }
+  }
+
+  &--dark {
+    background: #111827;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: var(--primary, #00aba9);
+    }
+  }
+
+  &__spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    border-top-color: #fff;
+    animation: dueno-submit-spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+}
+
+.dueno-status-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  animation: dueno-status-in 0.22s ease-out;
+
+  &--leaving {
+    animation: dueno-status-out 0.18s ease-in forwards;
+  }
+
+  &--success {
+    background: rgba(0, 171, 169, 0.08);
+    border: 1px solid rgba(0, 171, 169, 0.18);
+    color: #0f172a;
+
+    .dueno-status-message__icon {
+      color: var(--primary, #00aba9);
+    }
+  }
+
+  &--error {
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.16);
+    color: #7f1d1d;
+
+    .dueno-status-message__icon {
+      color: #dc2626;
+    }
+  }
+
+  &--toast {
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    max-width: min(100%, 420px);
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+
+    &.dueno-status-message--success {
+      background: #fff;
+      border: 1px solid rgba(0, 171, 169, 0.22);
+    }
+
+    .dueno-status-message__icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .dueno-status-message__text {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 500;
+      color: #334155;
+    }
+  }
+
+  &__icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: rgba(15, 23, 42, 0.78);
+  }
+
+  &__title {
+    font-weight: 700;
+    color: inherit;
+  }
+
+  &--error &__text {
+    color: rgba(127, 29, 29, 0.88);
+  }
+
+  &__dismiss {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    opacity: 0.55;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-left: auto;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .material-icons-outlined {
+      font-size: 18px;
+    }
+  }
+}

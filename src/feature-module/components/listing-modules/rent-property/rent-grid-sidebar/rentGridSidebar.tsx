@@ -24,8 +24,8 @@ const RentGridSidebar = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Rent Grid Sidebar"
-          paths={[{ label: "Rent Grid Sidebar", active: true }]}
+          title="Rent Property"
+          paths={[{ label: "Rent Property", active: true }]}
         />
         {/* End Breadscrumb */}
         {/* Start Content */}

@@ -1300,6 +1300,24 @@ export const getFeaturedSaleProperties = () =>
 export const getFeaturedRentProperties = () =>
   mergeFeaturedProperties("For Rent", FEATURED_RENT_PROPERTY_IDS);
 
+/** Sale + rent featured listings for the homepage hero card rotation. */
+export const getHeroFeaturedProperties = (): EstateProperty[] => {
+  const seen = new Set<string>();
+  const merged: EstateProperty[] = [];
+
+  for (const property of [
+    ...getFeaturedSaleProperties(),
+    ...getFeaturedRentProperties(),
+  ]) {
+    if (!seen.has(property.id)) {
+      seen.add(property.id);
+      merged.push(property);
+    }
+  }
+
+  return merged;
+};
+
 export const getSaleProperties = () =>
   getMergedProperties().filter((property) => property.listingType === "For Sale");
 
@@ -1309,11 +1327,11 @@ export const getRentProperties = () =>
 export const getAllLiveProperties = () => getMergedProperties();
 
 export const RECOMMENDED_LOCATION_SLUGS = [
-  "lagos-ikoyi",
-  "lagos-ikeja",
+  "lagos",
   "abuja",
   "port-harcourt",
   "ibadan",
+  "owerri",
 ] as const;
 
 export type RecommendedLocationSlug =
@@ -1328,13 +1346,9 @@ export const RECOMMENDED_LOCATIONS: Record<
   RecommendedLocationSlug,
   RecommendedLocationConfig
 > = {
-  "lagos-ikoyi": {
-    label: "Lagos, Ikoyi",
-    matchers: [/\bikoyi\b/i],
-  },
-  "lagos-ikeja": {
-    label: "Lagos, Ikeja",
-    matchers: [/\bikeja\b/i],
+  lagos: {
+    label: "Lagos",
+    matchers: [/\blagos\b/i],
   },
   abuja: {
     label: "Abuja",
@@ -1348,18 +1362,26 @@ export const RECOMMENDED_LOCATIONS: Record<
     label: "Ibadan",
     matchers: [/\bibadan\b/i],
   },
+  owerri: {
+    label: "Owerri",
+    matchers: [/\bowerri\b/i],
+  },
 };
 
 const LOCATION_SLUG_ALIASES: Record<string, RecommendedLocationSlug> = {
-  ikoyi: "lagos-ikoyi",
-  "lagos, ikoyi": "lagos-ikoyi",
-  "lagos ikoyi": "lagos-ikoyi",
-  ikeja: "lagos-ikeja",
-  "lagos, ikeja": "lagos-ikeja",
-  "lagos ikeja": "lagos-ikeja",
+  lagos: "lagos",
+  "lagos-ikoyi": "lagos",
+  "lagos, ikoyi": "lagos",
+  "lagos ikoyi": "lagos",
+  ikoyi: "lagos",
+  ikeja: "lagos",
+  "lagos-ikeja": "owerri",
+  "lagos, ikeja": "owerri",
+  "lagos ikeja": "owerri",
   abuja: "abuja",
   "port harcourt": "port-harcourt",
   ibadan: "ibadan",
+  owerri: "owerri",
 };
 
 const getPropertyLocationText = (property: EstateProperty) =>

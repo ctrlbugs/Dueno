@@ -13,11 +13,11 @@ const LOCATION_CARDS: {
   image: string;
   colClass: string;
 }[] = [
-  { slug: "lagos-ikoyi", image: "location-01.jpg", colClass: "col-lg-4" },
+  { slug: "lagos", image: "location-01.jpg", colClass: "col-lg-4" },
   { slug: "abuja", image: "location-02.jpg", colClass: "col-lg-4" },
   { slug: "port-harcourt", image: "location-03.jpg", colClass: "col-lg-4" },
   { slug: "ibadan", image: "location-04.jpg", colClass: "col-lg-6" },
-  { slug: "lagos-ikeja", image: "location-05.jpg", colClass: "col-lg-6" },
+  { slug: "owerri", image: "location-05.jpg", colClass: "col-lg-6" },
 ];
 
 const PropertySection = () => {

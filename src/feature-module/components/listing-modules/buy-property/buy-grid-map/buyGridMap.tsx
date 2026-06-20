@@ -33,10 +33,10 @@ const BuyGridMap = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Buy Grid Map"
+          title="Buy Property Map"
           paths={[
             { label: "Shop", link: "/shop" },
-            { label: "Buy Grid Map", active: true },
+            { label: "Buy Property Map", active: true },
           ]}
         />
 

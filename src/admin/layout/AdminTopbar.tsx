@@ -7,7 +7,7 @@ import {
   getUnreadCountForAdmin,
   subscribeMessages,
 } from "../../services/messageStore";
-import InboxNotificationBell from "../../shared/components/InboxNotificationBell";
+import StaffMessagesDropdown from "../../shared/components/StaffMessagesDropdown";
 
 const AdminTopbar = () => {
   const { user, logout } = useAdminAuth();
@@ -70,7 +70,7 @@ const AdminTopbar = () => {
             </Link>
           </li>
           <li>
-            <InboxNotificationBell to="/admin/messages" count={unreadCount} />
+            <StaffMessagesDropdown variant="dashboard" mode="admin" userId="admin-1" />
           </li>
           <li className="d-none d-md-inline-block">
             <Link to="/home" className="nav-link" target="_blank">
@@ -83,10 +83,10 @@ const AdminTopbar = () => {
                 variant="link"
                 className="nav-link dropdown-toggle nav-user px-2"
               >
-                <span className="account-user-avatar">
+                <span className="account-user-avatar account-user-avatar--brand">
                   <Image
-                    src="/assets/img/users/user-01.jpg"
-                    alt="Admin"
+                    src="/assets/img/logo.svg"
+                    alt="Dueno"
                     width={36}
                     height={36}
                     className="rounded-circle"

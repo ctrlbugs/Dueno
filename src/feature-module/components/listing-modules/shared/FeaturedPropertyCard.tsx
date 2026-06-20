@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import ImageWithBasePath from "../../../../core/imageWithBasePath";
 import type { EstateProperty } from "../../../../data/estateProperties";
 import { getPropertyDetailsPath, getPropertyCardTypeLabel } from "../../../../data/estateProperties";
+import PropertyCardAgentBadge from "../../../../shared/components/PropertyCardAgentBadge";
 
 type FeaturedPropertyCardProps = {
   property: EstateProperty;
@@ -11,11 +12,9 @@ type FeaturedPropertyCardProps = {
 
 const FeaturedPropertyCard = ({
   property,
-  avatarIndex = 1,
   layout = "grid",
 }: FeaturedPropertyCardProps) => {
   const detailsPath = getPropertyDetailsPath(property);
-  const avatarSrc = property.agentAvatar ?? `assets/img/users/user-0${avatarIndex}.jpg`;
   const wrapperClassName =
     layout === "carousel"
       ? "featured-property-slide-card d-flex h-100"
@@ -47,13 +46,10 @@ const FeaturedPropertyCard = ({
               <i className="material-icons-outlined text-warning">loyalty</i>
             </span>
           </div>
-          <span className="avatar avatar-md rounded-circle border-0 avatar-bottom property-agent-avatar">
-            <ImageWithBasePath
-              src={avatarSrc}
-              className="img-fluid border border-white rounded-circle"
-              alt="Agent"
-            />
-          </span>
+          <PropertyCardAgentBadge
+            property={property}
+            className="avatar-bottom"
+          />
         </div>
         <div className="rental-content">
           <div className="d-flex align-items-center justify-content-between mb-3 featured-card-meta">

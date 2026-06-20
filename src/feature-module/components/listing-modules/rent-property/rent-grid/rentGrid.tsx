@@ -1,7 +1,6 @@
 import { Link, useSearchParams } from "react-router";
+import { useMemo, useState } from "react";
 import { all_routes } from "../../../../routes/all_routes";
-import { Price_Range, Sort_By } from "../../../../../core/common/selectOption";
-import CommonSelect from "../../../../../core/common/common-select/commonSelect";
 import Breadcrumb from "../../../../../core/common/Breadcrumb/breadcrumb";
 import {
   filterPropertiesByLocationSlug,
@@ -9,10 +8,18 @@ import {
   getRentProperties,
 } from "../../../../../data/estateProperties";
 import { matchesSearchQuery } from "../../../../../utils/searchFilter";
+import {
+  sortEstateProperties,
+  type ListingPriceRange,
+  type ListingSortBy,
+} from "../../../../../utils/propertyListingSort";
 import BuyGridPropertyCard from "../../shared/BuyGridPropertyCard";
+import ListingSortToolbar from "../../shared/ListingSortToolbar";
 
 const RentGrid = () => {
   const [searchParams] = useSearchParams();
+  const [sortBy, setSortBy] = useState<ListingSortBy>("Default");
+  const [priceRange, setPriceRange] = useState<ListingPriceRange>("Low to High");
   const locationSlug = searchParams.get("location");
   const searchQuery = searchParams.get("q") ?? "";
   const locationLabel = getLocationFilterLabel(locationSlug);
@@ -23,20 +30,28 @@ const RentGrid = () => {
     ? `${locationQuery ? "&" : "?"}q=${encodeURIComponent(searchQuery)}`
     : "";
   const listQuery = `${locationQuery}${searchQuerySuffix}`;
-  const rentProperties = filterPropertiesByLocationSlug(
-    getRentProperties(),
-    locationSlug,
-  ).filter((property) =>
-    matchesSearchQuery(
-      searchQuery,
-      property.title,
-      property.fullTitle,
-      property.address,
-      property.agentName,
-      property.price,
-      property.category,
-      property.listingType,
-    ),
+  const rentProperties = useMemo(
+    () =>
+      sortEstateProperties(
+        filterPropertiesByLocationSlug(
+          getRentProperties(),
+          locationSlug,
+        ).filter((property) =>
+          matchesSearchQuery(
+            searchQuery,
+            property.title,
+            property.fullTitle,
+            property.address,
+            property.agentName,
+            property.price,
+            property.category,
+            property.listingType,
+          ),
+        ),
+        sortBy,
+        priceRange,
+      ),
+    [locationSlug, searchQuery, sortBy, priceRange],
   );
   const totalCount = rentProperties.length;
 
@@ -44,8 +59,8 @@ const RentGrid = () => {
     <>
       <div className="page-wrapper">
         <Breadcrumb
-          title={locationLabel ? `Rent in ${locationLabel}` : "Rent Grid"}
-          paths={[{ label: "Rent Grid", active: true }]}
+          title={locationLabel ? `Rent in ${locationLabel}` : "Rent Property"}
+          paths={[{ label: "Rent Property", active: true }]}
         />
         <div className="content overflow-hidden">
           <div className="container">
@@ -80,26 +95,12 @@ const RentGrid = () => {
                   </div>
                   <div className="col-lg-9">
                     <div className="d-flex align-items-center gap-3 flex-wrap justify-content-lg-end flex-lg-row flex-md-row flex-column">
-                      <div className="result-list d-flex d-block flex-lg-row flex-md-row flex-column align-items-center gap-2">
-                        <h5>Sort By</h5>
-                        <div className="result-select">
-                          <CommonSelect
-                            options={Sort_By}
-                            className="select"
-                            defaultValue={Sort_By[0]}
-                          />
-                        </div>
-                      </div>
-                      <div className="result-list d-flex flex-lg-row flex-md-row flex-column align-items-center gap-2">
-                        <h5>Price Range</h5>
-                        <div className="result-select">
-                          <CommonSelect
-                            options={Price_Range}
-                            className="select"
-                            defaultValue={Price_Range[0]}
-                          />
-                        </div>
-                      </div>
+                      <ListingSortToolbar
+                        sortBy={sortBy}
+                        priceRange={priceRange}
+                        onSortByChange={setSortBy}
+                        onPriceRangeChange={setPriceRange}
+                      />
                       <ul className="grid-list-view d-flex align-items-center justify-content-center">
                         <li>
                           <Link

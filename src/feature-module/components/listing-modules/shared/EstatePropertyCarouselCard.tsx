@@ -7,10 +7,8 @@ import {
   getPropertyDetailsPath,
 } from "../../../../data/estateProperties";
 import { isListingNew } from "../../../../utils/listingBadge";
-import {
-  resolvePropertyAgentAvatar,
-  resolvePropertyPrice,
-} from "../../../../utils/propertyDisplay";
+import PropertyCardAgentBadge from "../../../../shared/components/PropertyCardAgentBadge";
+import { resolvePropertyPrice } from "../../../../utils/propertyDisplay";
 import { estateCarouselInteractionRef } from "./estatePropertyCarouselSettings";
 
 type EstatePropertyCarouselCardProps = {
@@ -26,7 +24,6 @@ const EstatePropertyCarouselCard = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const pointerStart = useRef({ x: 0, y: 0, moved: false });
   const detailsPath = getPropertyDetailsPath(property);
-  const avatarSrc = resolvePropertyAgentAvatar(property);
   const displayPrice = resolvePropertyPrice(property.price);
   const showNewBadge = isListingNew(property.publishedAt, property.listedOn);
 
@@ -132,13 +129,7 @@ const EstatePropertyCarouselCard = ({
             </button>
           </div>
           <div className="d-flex align-items-center justify-content-start position-absolute bottom-0 end-0 start-0 p-3 z-1">
-            <span className="avatar avatar-md rounded-circle border-0 property-agent-avatar">
-              <ImageWithBasePath
-                src={avatarSrc}
-                alt={property.agentName ?? "Agent"}
-                className="img-fluid border border-white rounded-circle"
-              />
-            </span>
+            <PropertyCardAgentBadge property={property} />
           </div>
         </div>
         <div className="buy-grid-content">

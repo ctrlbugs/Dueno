@@ -8,10 +8,15 @@ import { setDataTheme } from "../../redux/themeSettingSlice";
 import { all_routes } from "../../../feature-module/routes/all_routes";
 import { isServiceDetailPath } from "../../../data/duenoServices";
 import HeaderNotificationsDropdown from "./HeaderNotificationsDropdown";
+import HeaderStaffMessagesDropdown from "./HeaderStaffMessagesDropdown";
 import HeaderAccountMenu from "./HeaderAccountMenu";
 import { useSavedPropertyCount } from "./useSavedPropertyCount";
 import { useAuth } from "../../../context/AuthContext";
 import { getAgentById } from "../../../services/agentStore";
+import {
+  attachHeaderDropdownAutoHide,
+  HEADER_DROPDOWN_OFFSET,
+} from "../../../shared/hooks/useBootstrapDropdownAutoHide";
 
 const Header = () => {
   const [subOpen, setSubopen] = useState<any>("");
@@ -37,6 +42,29 @@ const Header = () => {
   const canPostProperty =
     user?.role === "agent" && user.agentStatus === "approved";
   const showBuyerNotifications = user?.role === "buyer";
+  const showStaffMessages =
+    (user?.role === "agent" && user.agentStatus === "approved") ||
+    user?.role === "admin";
+
+  useEffect(() => {
+    let cleanup = () => {};
+    const timeoutId = window.setTimeout(() => {
+      cleanup = attachHeaderDropdownAutoHide();
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      cleanup();
+    };
+  }, [
+    location.pathname,
+    isAuthenticated,
+    showStaffMessages,
+    showBuyerNotifications,
+    user?.id,
+    user?.role,
+  ]);
+
   const toggleMobileMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     const nextOpen = !mobileMenuOpen;
@@ -713,6 +741,7 @@ const Header = () => {
                     to="#"
                     className="topbar-link btn btn-light"
                     data-bs-toggle="dropdown"
+                    data-bs-offset={HEADER_DROPDOWN_OFFSET}
                   >
                     <ImageWithBasePath
                       src="assets/img/flags/ng.svg"
@@ -771,39 +800,27 @@ const Header = () => {
                     </Link>
                   </div>
                 </div>
-                <div className="dropdown">
-                  <Link
-                    to="#"
-                    className="topbar-link btn btn-light"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="material-icons-outlined">wb_sunny</i>
-                  </Link>
-                  <div className="dropdown-menu dropdown-menu-end">
-                    <Link
-                      to="#"
-                      className={`dropdown-item d-flex align-items-center ${
-                        dataTheme === "light" && "active"
-                      }`}
-                      id="light-mode-toggle"
-                      onClick={() => handleDataThemeChange("light")}
-                    >
-                      <i className="material-icons-outlined me-2">wb_sunny</i>
-                      <span className="align-middle">Light Mode</span>
-                    </Link>
-                    <Link
-                      to="#"
-                      className={`dropdown-item d-flex align-items-center ${
-                        dataTheme === "dark" && "active"
-                      }`}
-                      id="dark-mode-toggle"
-                      onClick={() => handleDataThemeChange("dark")}
-                    >
-                      <i className="material-icons-outlined me-2">dark_mode</i>
-                      <span className="align-middle">Dark Mode</span>
-                    </Link>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  className={`topbar-link btn btn-light${
+                    dataTheme === "dark" ? " is-dark" : ""
+                  }`}
+                  aria-label={
+                    dataTheme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  aria-pressed={dataTheme === "dark"}
+                  onClick={() =>
+                    handleDataThemeChange(
+                      dataTheme === "dark" ? "light" : "dark",
+                    )
+                  }
+                >
+                  <i className="material-icons-outlined">
+                    {dataTheme === "dark" ? "dark_mode" : "wb_sunny"}
+                  </i>
+                </button>
                 {canPostProperty ? (
                   <Link
                     to="/agent/listings/new"
@@ -813,6 +830,7 @@ const Header = () => {
                     Post Property
                   </Link>
                 ) : null}
+                {showStaffMessages ? <HeaderStaffMessagesDropdown /> : null}
                 {isAuthenticated && user ? (
                   <HeaderAccountMenu
                     user={user}
@@ -869,6 +887,7 @@ const Header = () => {
                         : ""
                     }`}
                     data-bs-toggle="dropdown"
+                    data-bs-offset={HEADER_DROPDOWN_OFFSET}
                   >
                     <ImageWithBasePath
                       src="assets/img/flags/ng.svg"
@@ -927,40 +946,29 @@ const Header = () => {
                     </Link>
                   </div>
                 </div>
-                <div className="dropdown">
-                  <Link
-                    to="#"
-                    className="topbar-link btn btn-light"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="material-icons-outlined">wb_sunny</i>
-                  </Link>
-                  <div className="dropdown-menu dropdown-menu-end">
-                    <Link
-                      to="#"
-                      className={`dropdown-item d-flex align-items-center ${
-                        dataTheme === "light" && "active"
-                      }`}
-                      id="light-mode-toggle"
-                      onClick={() => handleDataThemeChange("light")}
-                    >
-                      <i className="material-icons-outlined me-2">wb_sunny</i>
-                      <span className="align-middle">Light Mode</span>
-                    </Link>
-                    <Link
-                      to="#"
-                      className={`dropdown-item d-flex align-items-center ${
-                        dataTheme === "dark" && "active"
-                      }`}
-                      id="dark-mode-toggle"
-                      onClick={() => handleDataThemeChange("dark")}
-                    >
-                      <i className="material-icons-outlined me-2">dark_mode</i>
-                      <span className="align-middle">Dark Mode</span>
-                    </Link>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  className={`topbar-link btn btn-light${
+                    dataTheme === "dark" ? " is-dark" : ""
+                  }`}
+                  aria-label={
+                    dataTheme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  aria-pressed={dataTheme === "dark"}
+                  onClick={() =>
+                    handleDataThemeChange(
+                      dataTheme === "dark" ? "light" : "dark",
+                    )
+                  }
+                >
+                  <i className="material-icons-outlined">
+                    {dataTheme === "dark" ? "dark_mode" : "wb_sunny"}
+                  </i>
+                </button>
                 {showBuyerNotifications ? <HeaderNotificationsDropdown /> : null}
+                {showStaffMessages ? <HeaderStaffMessagesDropdown /> : null}
                 <Link
                   to={all_routes.cart}
                   className={`topbar-link btn btn-light topbar-cart ${

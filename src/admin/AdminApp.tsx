@@ -8,6 +8,10 @@ import { ThemeProvider } from "@dashboard-ui/common/context";
 import "./styles/admin-overrides.scss";
 import { AdminAuthProvider, useAdminAuth } from "./context/AdminAuthContext";
 import { AdminSearchProvider } from "./context/AdminSearchContext";
+import {
+  DashboardPageLoader,
+  DashboardPortalLoader,
+} from "../shared/components/DashboardLoaders";
 
 const AdminLayout = lazy(() => import("./layout/AdminLayout"));
 
@@ -31,9 +35,9 @@ const AdminProtectedRoutes = () => {
 
   return (
     <AdminSearchProvider>
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<DashboardPortalLoader portal="admin" />}>
         <AdminLayout>
-          <Suspense fallback={<div className="p-4">Loading...</div>}>
+          <Suspense fallback={<DashboardPageLoader portal="admin" />}>
             <Routes>
             <Route index element={<AdminDashboard />} />
             <Route path="agents" element={<AgentsListPage />} />
@@ -54,7 +58,7 @@ const AdminProtectedRoutes = () => {
 };
 
 const AdminRoutes = () => (
-  <Suspense fallback={<div className="p-4">Loading admin...</div>}>
+  <Suspense fallback={<DashboardPortalLoader portal="admin" />}>
     <Routes>
       <Route path="login" element={<AdminLoginPage />} />
       <Route path="*" element={<AdminProtectedRoutes />} />

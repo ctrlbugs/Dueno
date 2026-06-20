@@ -2,9 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import Breadcrumb from "../../../../../core/common/Breadcrumb/breadcrumb";
 import CommonSelect from "../../../../../core/common/common-select/commonSelect";
 import {
-  AGENT_OPERATION_AREAS,
-  AGENT_PROPERTY_CATEGORIES,
-} from "../../../../../types/agentRegistration";
+  AGENT_LIST_CATEGORY_OPTIONS,
+  AGENT_LIST_DEFAULT_CITY,
+  AGENT_LIST_STATE_OPTIONS,
+  agentMatchesListCity,
+  agentMatchesListState,
+  type AgentListState,
+} from "../../../../../data/agentListFilters";
+import { AGENT_OPERATION_AREAS } from "../../../../../types/agentRegistration";
 import {
   getApprovedPublicAgents,
   subscribeAgents,
@@ -23,33 +28,72 @@ const AgentList = () => {
 
   useEffect(() => subscribeAgents(() => setAgents(getApprovedPublicAgents())), []);
 
-  const stateOptions = useMemo(() => {
-    const values = [...new Set(agents.map((agent) => agent.state).filter(Boolean))].sort();
-    return [ALL_OPTION, ...values.map((value) => ({ value, label: value }))];
-  }, [agents]);
+  const stateOptions = useMemo(
+    () => [
+      ALL_OPTION,
+      ...AGENT_LIST_STATE_OPTIONS.map((value) => ({ value, label: value })),
+    ],
+    [],
+  );
 
   const cityOptions = useMemo(() => {
-    const values = [...new Set(agents.map((agent) => agent.city).filter(Boolean))].sort();
-    return [ALL_OPTION, ...values.map((value) => ({ value, label: value }))];
-  }, [agents]);
+    if (stateFilter === "all") {
+      const values = [...new Set(agents.map((agent) => agent.city).filter(Boolean))].sort();
+      return [ALL_OPTION, ...values.map((value) => ({ value, label: value }))];
+    }
+
+    const values = [
+      ...new Set(
+        agents
+          .filter((agent) => agentMatchesListState(agent, stateFilter as AgentListState))
+          .map((agent) => agent.city)
+          .filter(Boolean),
+      ),
+    ].sort();
+
+    const defaultCity = AGENT_LIST_DEFAULT_CITY[stateFilter as AgentListState];
+    const merged = defaultCity
+      ? [defaultCity, ...values.filter((city) => city !== defaultCity)]
+      : values;
+
+    return [ALL_OPTION, ...merged.map((value) => ({ value, label: value }))];
+  }, [agents, stateFilter]);
 
   const categoryOptions = useMemo(() => {
-    const values = new Set<string>();
+    const values = new Set<string>(AGENT_LIST_CATEGORY_OPTIONS);
     agents.forEach((agent) => {
       agent.registration?.propertyCategories?.forEach((category) => values.add(category));
     });
-    const sorted = [...values].sort();
-    if (sorted.length === 0) {
-      return [ALL_OPTION, ...AGENT_PROPERTY_CATEGORIES.map((value) => ({ value, label: value }))];
-    }
-    return [ALL_OPTION, ...sorted.map((value) => ({ value, label: value }))];
+    return [
+      ALL_OPTION,
+      ...[...values].sort().map((value) => ({ value, label: value })),
+    ];
   }, [agents]);
+
+  const handleStateChange = (option: { value: string; label: string } | null) => {
+    const nextState = option?.value ?? "all";
+    setStateFilter(nextState);
+
+    if (nextState === "all") {
+      setCityFilter("all");
+      return;
+    }
+
+    setCityFilter(AGENT_LIST_DEFAULT_CITY[nextState as AgentListState] ?? nextState);
+  };
 
   const filteredAgents = useMemo(
     () =>
       agents.filter((agent) => {
-        if (stateFilter !== "all" && agent.state !== stateFilter) return false;
-        if (cityFilter !== "all" && agent.city !== cityFilter) return false;
+        if (
+          stateFilter !== "all" &&
+          !agentMatchesListState(agent, stateFilter as AgentListState)
+        ) {
+          return false;
+        }
+        if (cityFilter !== "all" && !agentMatchesListCity(agent, cityFilter)) {
+          return false;
+        }
         if (
           categoryFilter !== "all" &&
           !agent.registration?.propertyCategories?.includes(categoryFilter)
@@ -75,7 +119,7 @@ const AgentList = () => {
                   options={stateOptions}
                   className="select"
                   value={stateOptions.find((option) => option.value === stateFilter)}
-                  onChange={(option) => setStateFilter(option?.value ?? "all")}
+                  onChange={handleStateChange}
                   responsiveMenuHeight
                 />
               </div>
@@ -111,7 +155,7 @@ const AgentList = () => {
               <div className="d-lg-none">
                 <AgentListSwiper agents={filteredAgents} />
               </div>
-              <div className="row justify-content-center g-4 d-none d-lg-flex">
+              <div className="row justify-content-start g-4 d-none d-lg-flex">
                 {filteredAgents.map((agent) => (
                   <div key={agent.id} className="col-xl-4 col-lg-6 d-flex">
                     <AgentGridCard agent={agent} />

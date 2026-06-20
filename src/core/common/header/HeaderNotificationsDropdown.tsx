@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { all_routes } from "../../../feature-module/routes/all_routes";
 import {
@@ -9,6 +9,10 @@ import {
   markConversationRead,
   subscribeMessages,
 } from "../../../services/messageStore";
+import {
+  HEADER_DROPDOWN_OFFSET,
+  useBootstrapDropdownAutoHide,
+} from "../../../shared/hooks/useBootstrapDropdownAutoHide";
 
 const formatTimeAgo = (iso: string) => {
   const diffMs = Date.now() - new Date(iso).getTime();
@@ -38,10 +42,12 @@ const HeaderNotificationsDropdown = ({
   className = "",
 }: HeaderNotificationsDropdownProps) => {
   const { user } = useAuth();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const buyerId = user?.id ?? null;
   const [tick, setTick] = useState(0);
 
   useEffect(() => subscribeMessages(() => setTick((n) => n + 1)), []);
+  useBootstrapDropdownAutoHide(dropdownRef, [buyerId]);
 
   const conversations = useMemo(
     () => (buyerId ? getRecentConversationsForBuyer(buyerId, 5) : []),
@@ -58,11 +64,15 @@ const HeaderNotificationsDropdown = ({
   };
 
   return (
-    <div className={`dropdown ${className}`.trim()}>
+    <div
+      ref={dropdownRef}
+      className={`dropdown header-notifications-dropdown ${className}`.trim()}
+    >
       <Link
         to="#"
         className="topbar-link btn btn-light"
         data-bs-toggle="dropdown"
+        data-bs-offset={HEADER_DROPDOWN_OFFSET}
         aria-label="Notifications"
       >
         <i className="material-icons-outlined animate-ring">notifications_none</i>

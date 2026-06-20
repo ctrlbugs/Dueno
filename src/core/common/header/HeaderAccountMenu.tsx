@@ -1,7 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import AgentAvatar from "../../../shared/components/AgentAvatar";
 import type { AgentUser, PublicSession } from "../../../types/user";
 import { all_routes } from "../../../feature-module/routes/all_routes";
+import {
+  getUnreadCountForAgent,
+  getUnreadCountForAdmin,
+  subscribeMessages,
+} from "../../../services/messageStore";
+import {
+  HEADER_DROPDOWN_OFFSET,
+  useBootstrapDropdownAutoHide,
+} from "../../../shared/hooks/useBootstrapDropdownAutoHide";
 
 type Props = {
   user: PublicSession;
@@ -24,8 +34,20 @@ const getRoleLabel = (user: PublicSession) => {
 
 const HeaderAccountMenu = ({ user, agent, onLogout }: Props) => {
   const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [, refresh] = useState(0);
   const displayName = `${user.firstName} ${user.lastName}`.trim();
   const roleLabel = getRoleLabel(user);
+
+  useEffect(() => subscribeMessages(() => refresh((n) => n + 1)), []);
+
+  useBootstrapDropdownAutoHide(dropdownRef, [user.id, user.role, user.agentStatus]);
+
+  const agentUnreadCount =
+    user.role === "agent" && user.agentStatus === "approved"
+      ? getUnreadCountForAgent(user.id)
+      : 0;
+  const adminUnreadCount = user.role === "admin" ? getUnreadCountForAdmin() : 0;
 
   const handleSignOut = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -33,7 +55,7 @@ const HeaderAccountMenu = ({ user, agent, onLogout }: Props) => {
     navigate(all_routes.signin);
   };
 
-  const avatar =
+  const renderAvatar = () =>
     user.role === "agent" && agent ? (
       <AgentAvatar agent={agent} variant="header" />
     ) : (
@@ -43,20 +65,21 @@ const HeaderAccountMenu = ({ user, agent, onLogout }: Props) => {
     );
 
   return (
-    <div className="dropdown topbar-profile d-flex">
+    <div ref={dropdownRef} className="dropdown topbar-profile d-flex">
       <Link
         to="#"
-        className="avatar"
+        className="avatar avatar-rounded"
         data-bs-toggle="dropdown"
+        data-bs-offset={HEADER_DROPDOWN_OFFSET}
         aria-label="Account menu"
         onClick={(event) => event.preventDefault()}
       >
-        {avatar}
+        {renderAvatar()}
       </Link>
       <div className="dropdown-menu dropdown-menu-end">
         <div className="d-flex align-items-center user-profile px-2 py-1">
-          {avatar}
-          <div className="ms-2">
+          <div className="user-profile-avatar flex-shrink-0">{renderAvatar()}</div>
+          <div className="ms-2 min-w-0">
             <h6 className="mb-1">{displayName}</h6>
             <span className="d-block text-muted fs-13">{roleLabel}</span>
             {user.role === "agent" && agent?.agencyName ? (
@@ -72,6 +95,19 @@ const HeaderAccountMenu = ({ user, agent, onLogout }: Props) => {
           </Link>
         ) : null}
 
+        {user.role === "admin" ? (
+          <Link
+            to="/admin/messages"
+            className="dropdown-item d-inline-flex align-items-center"
+          >
+            <i className="material-icons-outlined me-2">mail_outline</i>
+            Messages
+            {adminUnreadCount > 0 ? (
+              <span className="badge bg-danger ms-auto">{adminUnreadCount}</span>
+            ) : null}
+          </Link>
+        ) : null}
+
         {user.role === "agent" ? (
           <>
             <Link
@@ -83,7 +119,7 @@ const HeaderAccountMenu = ({ user, agent, onLogout }: Props) => {
               className="dropdown-item d-inline-flex align-items-center"
             >
               <i className="material-icons-outlined me-2">dashboard</i>
-              Agent Dashboard
+              Dashboard
             </Link>
             {user.agentStatus === "approved" ? (
               <>
@@ -100,6 +136,16 @@ const HeaderAccountMenu = ({ user, agent, onLogout }: Props) => {
                 >
                   <i className="material-icons-outlined me-2">add_home</i>
                   Post Property
+                </Link>
+                <Link
+                  to="/agent/messages"
+                  className="dropdown-item d-inline-flex align-items-center"
+                >
+                  <i className="material-icons-outlined me-2">mail_outline</i>
+                  Messages
+                  {agentUnreadCount > 0 ? (
+                    <span className="badge bg-danger ms-auto">{agentUnreadCount}</span>
+                  ) : null}
                 </Link>
               </>
             ) : null}

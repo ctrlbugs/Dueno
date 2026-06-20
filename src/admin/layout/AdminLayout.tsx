@@ -6,6 +6,7 @@ import { changeHTMLAttribute } from "@dashboard-ui/utils";
 import "@dashboard-ui/assets/scss/app.scss";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
+import { DashboardPageLoader } from "../../shared/components/DashboardLoaders";
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {
   const { settings, updateSidebar } = useThemeContext();
@@ -52,7 +53,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
       <div className="content-page">
         <div className="content">
           <Container fluid>
-            <Suspense fallback={<div className="p-4">Loading...</div>}>
+            <Suspense fallback={<DashboardPageLoader portal="admin" />}>
               {children}
             </Suspense>
           </Container>

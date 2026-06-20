@@ -2,6 +2,9 @@ const MAX_FILE_BYTES = 8 * 1024 * 1024;
 const MAX_IMAGES = 12;
 const MAX_DIMENSION = 1400;
 const JPEG_QUALITY = 0.82;
+const WATERMARK_OPACITY = 0.5;
+const WATERMARK_MAX_WIDTH_RATIO = 0.18;
+const WATERMARK_SRC = `${import.meta.env.BASE_URL}assets/img/logo-white.svg`;
 
 export type ListingImageFile = {
   id: string;
@@ -30,6 +33,38 @@ const loadImage = (src: string): Promise<HTMLImageElement> =>
     img.src = src;
   });
 
+let watermarkImagePromise: Promise<HTMLImageElement> | null = null;
+
+const loadWatermarkImage = (): Promise<HTMLImageElement> => {
+  if (!watermarkImagePromise) {
+    watermarkImagePromise = loadImage(WATERMARK_SRC);
+  }
+  return watermarkImagePromise;
+};
+
+const drawDuenoWatermark = async (
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+) => {
+  try {
+    const logo = await loadWatermarkImage();
+    const maxWidth = width * WATERMARK_MAX_WIDTH_RATIO;
+    const scale = maxWidth / logo.width;
+    const logoWidth = logo.width * scale;
+    const logoHeight = logo.height * scale;
+    const x = (width - logoWidth) / 2;
+    const y = (height - logoHeight) / 2;
+
+    ctx.save();
+    ctx.globalAlpha = WATERMARK_OPACITY;
+    ctx.drawImage(logo, x, y, logoWidth, logoHeight);
+    ctx.restore();
+  } catch {
+    // Listing upload should still succeed if the watermark asset fails to load.
+  }
+};
+
 const compressDataUrl = async (dataUrl: string): Promise<string> => {
   const img = await loadImage(dataUrl);
   const scale = Math.min(1, MAX_DIMENSION / Math.max(img.width, img.height));
@@ -43,6 +78,7 @@ const compressDataUrl = async (dataUrl: string): Promise<string> => {
   if (!ctx) return dataUrl;
 
   ctx.drawImage(img, 0, 0, width, height);
+  await drawDuenoWatermark(ctx, width, height);
   return canvas.toDataURL("image/jpeg", JPEG_QUALITY);
 };
 

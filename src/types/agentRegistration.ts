@@ -58,6 +58,8 @@ export const AGENT_OPERATION_AREAS = [
 ] as const;
 
 export const AGENT_PROPERTY_CATEGORIES = [
+  "Buy Property",
+  "Rent Property",
   "Residential",
   "Commercial",
   "Land",

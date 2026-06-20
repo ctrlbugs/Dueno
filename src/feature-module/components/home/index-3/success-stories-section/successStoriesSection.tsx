@@ -1,23 +1,47 @@
 import { Link } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  Autoplay,
+  EffectFade,
+  Keyboard,
+  Pagination,
+} from "swiper/modules";
 import ImageWithBasePath from "../../../../../core/imageWithBasePath";
-import { SUCCESS_STORY_TESTIMONIALS } from "../../../../../data/siteAvatars";
+import {
+  chunkSuccessStoryTestimonials,
+  SUCCESS_STORY_CARDS_PER_SLIDE,
+  SUCCESS_STORY_TESTIMONIALS,
+  type Testimonial,
+} from "../../../../../data/siteAvatars";
+import "../../../../../../node_modules/swiper/swiper.css";
+import "../../../../../../node_modules/swiper/modules/effect-fade.css";
+import "../../../../../../node_modules/swiper/modules/pagination.css";
 
 const TestimonialCard = ({
   quote,
   name,
   location,
   avatar,
-}: (typeof SUCCESS_STORY_TESTIMONIALS)[number]) => (
+  rating,
+}: Testimonial) => (
   <div className="review-item mb-4">
-    <span className="d-block mb-3">
+    <span className="d-block mb-3 review-quote">
       <ImageWithBasePath
         src="assets/img/icons/quote-down-02.svg"
+        className="review-quote-icon"
         alt=""
+        width={30}
+        height={30}
       />
     </span>
     <div className="d-flex align-items-center mb-2">
       {Array.from({ length: 5 }).map((_, index) => (
-        <i key={index} className="material-icons-outlined text-warning">
+        <i
+          key={index}
+          className={`material-icons-outlined ${
+            index < rating ? "text-warning" : "text-muted opacity-50"
+          }`}
+        >
           star
         </i>
       ))}
@@ -42,15 +66,33 @@ const TestimonialCard = ({
   </div>
 );
 
+const SuccessStorySlide = ({ testimonials }: { testimonials: Testimonial[] }) => {
+  const leftColumn = testimonials.slice(0, 2);
+  const rightColumn = testimonials.slice(2, SUCCESS_STORY_CARDS_PER_SLIDE);
+
+  return (
+    <div className="row success-stories-slide">
+      <div className="col-md-6">
+        {leftColumn.map((testimonial) => (
+          <TestimonialCard key={testimonial.id} {...testimonial} />
+        ))}
+      </div>
+      <div className="col-md-6 mt-4 mt-md-4">
+        {rightColumn.map((testimonial) => (
+          <TestimonialCard key={testimonial.id} {...testimonial} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const SuccessStoriesSection = () => {
-  const [leftColumn, rightColumn] = [
-    SUCCESS_STORY_TESTIMONIALS.slice(0, 2),
-    SUCCESS_STORY_TESTIMONIALS.slice(2, 4),
-  ];
+  const slides = chunkSuccessStoryTestimonials(SUCCESS_STORY_TESTIMONIALS);
+  const enableCarousel = slides.length > 1;
 
   return (
     <>
-      <section className="success-stories-section">
+      <section className="success-stories-section" id="client-stories">
         <div className="section-bg">
           <ImageWithBasePath
             src="assets/img/home-3/bg/sec-bg-07.png"
@@ -86,7 +128,7 @@ const SuccessStoriesSection = () => {
                   </Link>
                 </div>
                 <div className="success-customer mb-4">
-                  <h6>Trusted by 50K+ customers</h6>
+                  <h6>Trusted by 2K customers</h6>
                   <div className="d-flex align-items-center rating mb-1">
                     {Array.from({ length: 5 }).map((_, index) => (
                       <i
@@ -96,10 +138,8 @@ const SuccessStoriesSection = () => {
                         star
                       </i>
                     ))}
-                    4.4/5.0
-                    <span className="border-start ps-2 ms-2">
-                      3,857 Reviews
-                    </span>
+                    4.3/5.0
+                    <span className="border-start ps-2 ms-2">857 Reviews</span>
                   </div>
                 </div>
                 <div className="arrow-bottom">
@@ -111,18 +151,41 @@ const SuccessStoriesSection = () => {
               </div>
             </div>
             <div className="col-lg-8">
-              <div className="row">
-                <div className="col-md-6">
-                  {leftColumn.map((testimonial) => (
-                    <TestimonialCard key={testimonial.id} {...testimonial} />
-                  ))}
-                </div>
-                <div className="col-md-6 mt-4">
-                  {rightColumn.map((testimonial) => (
-                    <TestimonialCard key={testimonial.id} {...testimonial} />
-                  ))}
-                </div>
-              </div>
+              <Swiper
+                modules={[Autoplay, EffectFade, Keyboard, Pagination]}
+                effect="fade"
+                fadeEffect={{ crossFade: true }}
+                speed={650}
+                slidesPerView={1}
+                loop={enableCarousel}
+                autoplay={
+                  enableCarousel
+                    ? {
+                        delay: 5500,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                      }
+                    : false
+                }
+                pagination={
+                  enableCarousel
+                    ? {
+                        clickable: true,
+                        dynamicBullets: true,
+                      }
+                    : false
+                }
+                keyboard={{ enabled: true }}
+                className={`success-stories-carousel${
+                  enableCarousel ? " success-stories-carousel--active" : ""
+                }`}
+              >
+                {slides.map((testimonials, slideIndex) => (
+                  <SwiperSlide key={`success-story-slide-${slideIndex}`}>
+                    <SuccessStorySlide testimonials={testimonials} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
           </div>
         </div>

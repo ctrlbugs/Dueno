@@ -31,8 +31,8 @@ const BuyListMap = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Buy List Map"
-          paths={[{ label: "Buy List Map", active: true }]}
+          title="Buy Property Map"
+          paths={[{ label: "Buy Property Map", active: true }]}
         />
 
         {/* End Breadscrumb */}

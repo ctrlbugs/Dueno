@@ -1,8 +1,12 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Card, Col, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AgentPageBreadcrumb from "../components/AgentPageBreadcrumb";
 import AgentProfileHeader from "../../shared/components/AgentProfileHeader";
+import {
+  DuenoStatusMessage,
+  DuenoSubmitButton,
+} from "../../shared/components/DuenoFormFeedback";
 import { useAuth } from "../../context/AuthContext";
 import {
   getAgentById,
@@ -46,21 +50,24 @@ const AgentProfileSettingsPage = () => {
 
   useEffect(() => subscribeAgents(() => refresh((value) => value + 1)), []);
 
-  const agent = user ? getAgentById(user.id) : undefined;
+  const agentId = user?.id;
+  const agent = agentId ? getAgentById(agentId) : undefined;
 
   useEffect(() => {
-    if (!agent) return;
-    setBio(agent.bio ?? "");
-    setAvailability(agent.availability ?? "available");
+    if (!agentId) return;
+    const stored = getAgentById(agentId);
+    if (!stored) return;
+    setBio(stored.bio ?? "");
+    setAvailability(stored.availability ?? "available");
     setSocialLinks({
-      x: agent.socialLinks?.x ?? "",
-      instagram: agent.socialLinks?.instagram ?? "",
-      linkedin: agent.socialLinks?.linkedin ?? "",
-      tiktok: agent.socialLinks?.tiktok ?? "",
-      facebook: agent.socialLinks?.facebook ?? "",
-      youtube: agent.socialLinks?.youtube ?? "",
+      x: stored.socialLinks?.x ?? "",
+      instagram: stored.socialLinks?.instagram ?? "",
+      linkedin: stored.socialLinks?.linkedin ?? "",
+      tiktok: stored.socialLinks?.tiktok ?? "",
+      facebook: stored.socialLinks?.facebook ?? "",
+      youtube: stored.socialLinks?.youtube ?? "",
     });
-  }, [agent]);
+  }, [agentId]);
 
   if (!user || user.role !== "agent" || !agent) {
     return null;
@@ -69,6 +76,22 @@ const AgentProfileSettingsPage = () => {
   const listingCount = getPropertiesByAgentId(agent.id).length;
   const followerCount = getFollowerCount(agent.id);
   const publicProfilePath = getAgentProfilePath(agent.id);
+  const hasCustomCover = Boolean(agent.coverImageDataUrl);
+
+  const handleUseDefaultCover = () => {
+    setError(null);
+    setMessage(null);
+
+    const updated = updateAgentProfile(agent.id, { coverImageDataUrl: undefined });
+    if (!updated) {
+      setError("Could not restore the default cover.");
+      return;
+    }
+
+    refresh((value) => value + 1);
+    refreshSession();
+    setMessage("Default cover image restored.");
+  };
 
   const handleImageUpload =
     (field: "avatarDataUrl" | "coverImageDataUrl") =>
@@ -106,11 +129,14 @@ const AgentProfileSettingsPage = () => {
     setMessage(null);
 
     try {
-      updateAgentProfile(agent.id, {
+      const updated = updateAgentProfile(agent.id, {
         bio: bio.trim(),
         availability,
         socialLinks: normalizeSocialLinks(socialLinks),
       });
+      if (!updated) {
+        throw new Error("Could not save profile.");
+      }
       refresh((value) => value + 1);
       setMessage("Profile saved.");
     } catch (saveError) {
@@ -146,16 +172,25 @@ const AgentProfileSettingsPage = () => {
         </Card.Body>
       </Card>
 
-      {message && (
-        <Alert variant="success" onClose={() => setMessage(null)} dismissible>
-          {message}
-        </Alert>
-      )}
-      {error && (
-        <Alert variant="danger" onClose={() => setError(null)} dismissible>
-          {error}
-        </Alert>
-      )}
+      {message ? (
+        <DuenoStatusMessage
+          variant="success"
+          message={message}
+          layout="toast"
+          autoDismissMs={3000}
+          onDismiss={() => setMessage(null)}
+          className="mb-3"
+        />
+      ) : null}
+      {error ? (
+        <DuenoStatusMessage
+          variant="error"
+          message={error}
+          layout="toast"
+          onDismiss={() => setError(null)}
+          className="mb-3"
+        />
+      ) : null}
 
       <Form onSubmit={handleSubmit}>
         <Row className="g-4">
@@ -173,6 +208,21 @@ const AgentProfileSettingsPage = () => {
                   <Form.Text className="text-muted">
                     Wide banner shown at the top of your profile. Max 2 MB.
                   </Form.Text>
+                  {hasCustomCover ? (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={handleUseDefaultCover}
+                      >
+                        Use default cover image
+                      </button>
+                    </div>
+                  ) : (
+                    <Form.Text className="text-muted d-block mt-1">
+                      Using the default Dueno cover.
+                    </Form.Text>
+                  )}
                 </Form.Group>
                 <Form.Group className="mb-0">
                   <Form.Label>Profile photo</Form.Label>
@@ -253,9 +303,9 @@ const AgentProfileSettingsPage = () => {
         </Row>
 
         <div className="d-flex justify-content-end mt-4">
-          <Button type="submit" variant="primary" disabled={saving}>
-            {saving ? "Saving…" : "Save profile"}
-          </Button>
+          <DuenoSubmitButton isLoading={saving} loadingLabel="Saving…">
+            Save profile
+          </DuenoSubmitButton>
         </div>
       </Form>
     </>

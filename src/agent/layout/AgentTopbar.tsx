@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { Dropdown, Image } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import AgentAvatar from "../../shared/components/AgentAvatar";
 import { useAuth } from "../../context/AuthContext";
 import { all_routes } from "../../feature-module/routes/all_routes";
-import { getAgentById } from "../../services/agentStore";
+import { getAgentById, subscribeAgents } from "../../services/agentStore";
 import {
   getUnreadCountForAgent,
   subscribeMessages,
 } from "../../services/messageStore";
-import InboxNotificationBell from "../../shared/components/InboxNotificationBell";
+import StaffMessagesDropdown from "../../shared/components/StaffMessagesDropdown";
 import { useAgentSearch } from "../context/AgentSearchContext";
 import toggleSidebar from "../utils/toggleSidebar";
 
@@ -21,6 +22,7 @@ const AgentTopbar = () => {
   const unreadCount = user ? getUnreadCountForAgent(user.id) : 0;
 
   useEffect(() => subscribeMessages(() => refresh((n) => n + 1)), []);
+  useEffect(() => subscribeAgents(() => refresh((n) => n + 1)), []);
 
   const handleLogout = () => {
     logout();
@@ -81,10 +83,13 @@ const AgentTopbar = () => {
             </Link>
           </li>
           <li>
-            <InboxNotificationBell
-              to="/agent/messages"
-              count={unreadCount}
-            />
+            {user ? (
+              <StaffMessagesDropdown
+                variant="dashboard"
+                mode="agent"
+                userId={user.id}
+              />
+            ) : null}
           </li>
           <li className="d-none d-md-inline-block">
             <Link to="/home" className="nav-link" target="_blank">
@@ -98,14 +103,16 @@ const AgentTopbar = () => {
                 className="nav-link dropdown-toggle nav-user px-2"
               >
                 <span className="account-user-avatar">
-                  <Image
-                    src="/assets/img/users/user-01.jpg"
-                    alt="Agent"
-                    width={36}
-                    height={36}
-                    className="rounded-circle"
-                    roundedCircle
-                  />
+                  {agent ? (
+                    <AgentAvatar agent={agent} variant="header" />
+                  ) : (
+                    <span
+                      className="agent-avatar-fallback agent-avatar-fallback--header"
+                      aria-hidden="true"
+                    >
+                      <span className="material-icons-outlined">person</span>
+                    </span>
+                  )}
                 </span>
                 <span className="d-lg-block d-none">
                   <h5 className="my-0 fw-normal">{user?.firstName ?? "Agent"}</h5>

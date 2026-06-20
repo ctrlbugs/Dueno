@@ -21,14 +21,14 @@ const AgentAvatar = ({
       <ImageWithBasePath
         src={avatarUrl}
         alt={name}
-        className={
+        className={`agent-avatar-img ${
           variant === "profile" ||
           variant === "card" ||
           variant === "header" ||
           variant === "hero"
-            ? `rounded-circle border ${className}`.trim()
-            : className
-        }
+            ? "rounded-circle border"
+            : ""
+        } ${className}`.trim()}
       />
     );
   }

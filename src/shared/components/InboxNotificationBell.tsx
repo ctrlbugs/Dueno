@@ -12,7 +12,7 @@ const InboxNotificationBell = ({
   label = "Messages",
 }: InboxNotificationBellProps) => (
   <Link to={to} className="nav-link position-relative inbox-notification-bell">
-    <i className="ri-notification-3-line fs-22" />
+    <i className="material-icons-outlined fs-22">mail_outline</i>
     <span className="visually-hidden">{label}</span>
     {count > 0 && (
       <span className="inbox-notification-badge">

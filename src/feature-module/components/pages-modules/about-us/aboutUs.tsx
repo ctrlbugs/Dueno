@@ -1,5 +1,6 @@
 import Breadcrumb from "../../../../core/common/Breadcrumb/breadcrumb";
 import ImageWithBasePath from "../../../../core/imageWithBasePath";
+import AboutPartnersSlider from "./AboutPartnersSlider";
 
 const AboutUs = () => {
   return (
@@ -20,17 +21,16 @@ const AboutUs = () => {
             <div className="row">
               <div className="col-lg-12 mx-auto">
                 <div className="about-us-item-01">
-                  <h2>We Connect Building With People</h2>
+                  <h2>Connecting Nigerians With Verified Property</h2>
                   <p className="mb-0">
-                    We believe in more than just property transactions—we
-                    believe in creating meaningful connections. "We Connect
-                    Building With People" represents our mission to bridge the
-                    gap between spaces and those who bring them to life. Whether
-                    you're searching for a dream home, an office space, or a
-                    real estate investment, our platform makes it easier to
-                    discover the right fit. With trusted listings, expert
-                    support, and seamless technology, we help you turn
-                    structures into stories, and buildings into belonging.
+                    Dueno Property is a modern Nigerian real estate platform
+                    built to connect buyers, renters, and agents with verified
+                    listings and trusted services. We believe property is more
+                    than a transaction — it is about finding the right space,
+                    in the right city, with confidence at every step. From
+                    Abuja to Lagos and beyond, we combine transparent listings,
+                    vetted agents, and practical support to help you move from
+                    search to keys with clarity and trust.
                   </p>
                 </div>
                 {/* start row */}
@@ -168,22 +168,22 @@ const AboutUs = () => {
                 </h5>
                 <p>
                   Explore a wide range of verified property listings tailored to
-                  match your lifestyle and budget. Whether you're seeking a
-                  luxurious apartment in the city or a cozy family home in the
-                  suburbs, our platform provides a seamless and reliable booking
-                  experience. Benefit from secure transactions, instant booking
-                  confirmations. With user-friendly features and trustworthy
-                  listings, Dreams Estate makes it easy to find and secure your
-                  perfect space.
+                  match your lifestyle and budget across Nigeria. Whether you're
+                  seeking an apartment in Abuja, a family home in Lagos, or
+                  commercial space for your business, Dueno Property provides a
+                  seamless and reliable experience. Benefit from secure
+                  enquiries, trusted agents, and listings you can review with
+                  confidence. With user-friendly search and transparent
+                  details, Dueno Property makes it easier to find and secure
+                  your perfect space.
                 </p>
                 <p className="mb-0">
-                  With Dreams Estate, you gain access to premium properties and
-                  a user-friendly platform designed for convenience. Filter
-                  options help narrow your search by location, price, and
-                  amenities. Stay informed with real-time updates and
-                  notifications. Whether renting or buying, experience
-                  confidence and ease throughout your property booking journey
-                  with us.
+                  With Dueno Property, you gain access to verified listings and
+                  a platform designed for convenience. Filter by location,
+                  price, and property type to narrow your search quickly. Stay
+                  informed with real-time updates and direct agent contact.
+                  Whether renting or buying, experience confidence and clarity
+                  throughout your property journey with us.
                 </p>
               </div>
               {/* end col */}
@@ -197,90 +197,14 @@ const AboutUs = () => {
             <div className="row">
               <div className="col-lg-11 mx-auto">
                 <div className="text-center about-us-item-05">
-                  <h2 className="mb-3">
-                    Hundreds of Partners Around the World
-                  </h2>
+                  <h2 className="mb-3">Trusted Partners Across Nigeria</h2>
                   <p className="mb-0">
-                    Every day, we build trust through communication,
-                    transparency, and results.
+                    Dueno Property works with leading brands and service
+                    providers across Nigeria to deliver verified listings,
+                    secure transactions, and a seamless property experience.
                   </p>
                 </div>
-                {/* start row */}
-                <div className="row align-items-center row-gap-4">
-                  <div className="col-md-6 col-lg-2 d-flex">
-                    <div className="card border-0 bg-light shadow-none flex-fill mb-0">
-                      <div className="card-body text-center">
-                        <ImageWithBasePath
-                          src="assets/img/about-us/livechat.svg"
-                          alt="image"
-                          className="img-fluid"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* end col */}
-                  <div className="col-md-6 col-lg-2 d-flex">
-                    <div className="card border-0 bg-light shadow-none flex-fill mb-0">
-                      <div className="card-body text-center">
-                        <ImageWithBasePath
-                          src="assets/img/about-us/headspace.svg"
-                          alt="image"
-                          className="img-fluid"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* end col */}
-                  <div className="col-md-6 col-lg-2 d-flex">
-                    <div className="card border-0 bg-light shadow-none flex-fill mb-0">
-                      <div className="card-body text-center">
-                        <ImageWithBasePath
-                          src="assets/img/about-us/payehere.svg"
-                          alt="image"
-                          className="img-fluid"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* end col */}
-                  <div className="col-md-6 col-lg-2 d-flex">
-                    <div className="card border-0 bg-light shadow-none flex-fill mb-0">
-                      <div className="card-body text-center">
-                        <ImageWithBasePath
-                          src="assets/img/about-us/scapic.svg"
-                          alt="image"
-                          className="img-fluid"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* end col */}
-                  <div className="col-md-6 col-lg-2 d-flex">
-                    <div className="card border-0 bg-light shadow-none flex-fill mb-0">
-                      <div className="card-body text-center">
-                        <ImageWithBasePath
-                          src="assets/img/about-us/livechat.svg"
-                          alt="image"
-                          className="img-fluid"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* end col */}
-                  <div className="col-md-6 col-lg-2 d-flex">
-                    <div className="card border-0 bg-light shadow-none flex-fill mb-0">
-                      <div className="card-body text-center">
-                        <ImageWithBasePath
-                          src="assets/img/about-us/memberstack.svg"
-                          alt="image"
-                          className="img-fluid"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* end col */}
-                </div>
-                {/* end row */}
+                <AboutPartnersSlider />
               </div>
               {/* end col */}
             </div>

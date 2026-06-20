@@ -3,7 +3,18 @@ import { all_routes } from "../../../feature-module/routes/all_routes";
 import ImageWithBasePath from "../../imageWithBasePath";
 import { useEffect, useState } from "react";
 import { SITE_CONTACT } from "../../../data/siteContact";
+import {
+  FOOTER_COMPANY_LINKS,
+  FOOTER_USEFUL_LINKS,
+} from "../../../data/footerLinks";
 import NewsletterSubscribeForm from "../../../shared/components/NewsletterSubscribeForm";
+
+const renderFooterLinks = (links: typeof FOOTER_COMPANY_LINKS) =>
+  links.map((link) => (
+    <li key={link.label}>
+      <Link to={link.to}>{link.label}</Link>
+    </li>
+  ));
 
 const Footer = () => {
   const location = useLocation();
@@ -116,26 +127,7 @@ const Footer = () => {
                     <div className="footer-widget">
                       <h5 className="footer-title">Company</h5>
                       <ul className="footer-menu">
-                        <li>
-                          <Link to={all_routes.aboutUs}>About Us</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Careers</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.blogGrid}>Blog</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Affiliate Program</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.addpropertybuy}>
-                            Add Your Listing
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#">Our Partners</Link>
-                        </li>
+                        {renderFooterLinks(FOOTER_COMPANY_LINKS)}
                       </ul>
                     </div>
                   </div>
@@ -168,28 +160,7 @@ const Footer = () => {
                     <div className="footer-widget">
                       <h5 className="footer-title">Useful Links</h5>
                       <ul className="footer-menu">
-                        <li>
-                          <Link to="#">Legal Notice</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.privacyPolicy}>
-                            Privacy Policy
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.termsCondition}>
-                            Terms &amp; Conditions
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#">Support</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Refund Policy</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.contactUs}>Contact Us</Link>
-                        </li>
+                        {renderFooterLinks(FOOTER_USEFUL_LINKS)}
                       </ul>
                     </div>
                   </div>
@@ -253,23 +224,7 @@ const Footer = () => {
                     <div className="footer-widget">
                       <h5 className="footer-title">Company</h5>
                       <ul className="footer-menu">
-                        <li>
-                          <Link to={all_routes.aboutUs}>About Us</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Careers</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.blogGrid}>Blog</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Affiliate Program</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.addpropertybuy}>
-                            Add Your Listing
-                          </Link>
-                        </li>
+                        {renderFooterLinks(FOOTER_COMPANY_LINKS)}
                       </ul>
                     </div>
                   </div>
@@ -421,26 +376,7 @@ const Footer = () => {
                     <div className="footer-widget">
                       <h5 className="footer-title">Company</h5>
                       <ul className="footer-menu">
-                        <li>
-                          <Link to={all_routes.aboutUs}>About Us</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Careers</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.blogGrid}>Blog</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Affiliate Program</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.addpropertybuy}>
-                            Add Your Listing
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#">Our Partners</Link>
-                        </li>
+                        {renderFooterLinks(FOOTER_COMPANY_LINKS)}
                       </ul>
                     </div>
                   </div>
@@ -475,28 +411,7 @@ const Footer = () => {
                     <div className="footer-widget">
                       <h5 className="footer-title">Useful Links</h5>
                       <ul className="footer-menu">
-                        <li>
-                          <Link to="#">Legal Notice</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.privacyPolicy}>
-                            Privacy Policy
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.termsCondition}>
-                            Terms &amp; Conditions
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#">Support</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Refund Policy</Link>
-                        </li>
-                        <li>
-                          <Link to={all_routes.contactUs}>Contact Us</Link>
-                        </li>
+                        {renderFooterLinks(FOOTER_USEFUL_LINKS)}
                       </ul>
                     </div>
                   </div>

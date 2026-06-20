@@ -11,6 +11,7 @@ import { getAgentById } from "../../services/agentStore";
 import { saveSession } from "../../services/authService";
 import AgentSidebar from "./AgentSidebar";
 import AgentTopbar from "./AgentTopbar";
+import { DashboardPageLoader } from "../../shared/components/DashboardLoaders";
 
 const AgentLayout = () => {
   const { settings, updateSidebar } = useThemeContext();
@@ -78,7 +79,7 @@ const AgentLayout = () => {
       <div className="content-page">
         <div className="content">
           <Container fluid>
-            <Suspense fallback={<div className="p-4">Loading...</div>}>
+            <Suspense fallback={<DashboardPageLoader portal="agent" />}>
               <Outlet />
             </Suspense>
           </Container>

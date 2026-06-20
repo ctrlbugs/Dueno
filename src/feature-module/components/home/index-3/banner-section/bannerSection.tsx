@@ -1,11 +1,10 @@
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
-import ImageWithBasePath from "../../../../../core/imageWithBasePath";
 import { all_routes } from "../../../../routes/all_routes";
-import { getBuyDetailsPath } from "../../../../../data/estateProperties";
 import CustomerAvatarStack from "../shared/CustomerAvatarStack";
 import { Property_Type } from "../../../../../core/common/selectOption";
 import CommonSelect from "../../../../../core/common/common-select/commonSelect";
+import HeroFeaturedPropertyCard from "./HeroFeaturedPropertyCard";
 
 type HeroTextSegment = {
   text: string;
@@ -152,44 +151,7 @@ const BannerSection = () => {
             {/* end col */}
             <div className="col-xxl-4 col-lg-5 banner-hero-media-col">
               <div className="banner-right-content">
-                <div className="banner-card">
-                  <div className="card-img">
-                    <Link to={getBuyDetailsPath("naf-valley-estate")}>
-                      <ImageWithBasePath
-                        src="assets/img/home-3/banner-01.png"
-                        className="banner-card__image"
-                        alt="Beautiful Condo Room"
-                      />
-                    </Link>
-                  </div>
-                  <div className="banner-card__body">
-                    <h6 className="text-white">
-                      <Link to={getBuyDetailsPath("naf-valley-estate")} className="text-white">
-                        Beautiful Condo Room
-                      </Link>
-                    </h6>
-                    <span className="text-white mb-1 d-block">
-                      Ikoyi Villla Apartment
-                    </span>
-                    <p className="rate-info mb-3">
-                      <span>₦450,000 </span> / month
-                    </p>
-                    <div className="d-flex align-items-center card-info">
-                      <p className="me-3">
-                        <span className="me-2">
-                          <i className="material-icons-outlined">bed</i>
-                        </span>
-                        2 Bedroom
-                      </p>
-                      <p>
-                        <span className="me-2">
-                          <i className="material-icons-outlined">bathtub</i>
-                        </span>
-                        2 Bath
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <HeroFeaturedPropertyCard />
                 <div className="banner-users d-flex align-items-center flex-wrap gap-2 mb-3">
                   <CustomerAvatarStack />
                   <div>
@@ -214,7 +176,7 @@ const BannerSection = () => {
                       </i>
                     </div>
                     <p className="mb-0 text-white fs-13">
-                      Trusted By Client around the World
+                      Trusted by Clients Across Nigeria
                     </p>
                   </div>
                 </div>

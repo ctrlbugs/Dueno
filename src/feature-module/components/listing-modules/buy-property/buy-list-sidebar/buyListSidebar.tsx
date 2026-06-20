@@ -24,8 +24,8 @@ const BuyListSidebar = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Buy List Sidebar"
-          paths={[{ label: "Buy List Sidebar", active: true }]}
+          title="Buy Property"
+          paths={[{ label: "Buy Property", active: true }]}
         />
 
         {/* End Breadscrumb */}

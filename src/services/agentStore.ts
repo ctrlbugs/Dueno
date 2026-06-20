@@ -1,5 +1,5 @@
 import { getDevSeedAgents } from "../config/devAccounts";
-import { getPublicAgents, PUBLIC_AGENT_IDS } from "../config/publicAgents";
+import { getPublicAgents } from "../config/publicAgents";
 import type { AgentStatus, AgentUser } from "../types/user";
 
 const STORAGE_KEY = "_DUENO_AGENTS";
@@ -12,23 +12,8 @@ const mergePublicAgents = (agents: AgentUser[]): AgentUser[] => {
   const merged = [...agents];
 
   for (const seed of seeds) {
-    const index = merged.findIndex((agent) => agent.id === seed.id);
-    if (index === -1) {
-      merged.push(seed);
-      changed = true;
-      continue;
-    }
-
-    if (!PUBLIC_AGENT_IDS.has(seed.id)) continue;
-
-    const existing = merged[index];
-    merged[index] = {
-      ...seed,
-      password: existing.password || seed.password,
-      email: existing.email || seed.email,
-      avatarDataUrl: existing.avatarDataUrl ?? seed.avatarDataUrl,
-      coverImageDataUrl: existing.coverImageDataUrl ?? seed.coverImageDataUrl,
-    };
+    if (merged.some((agent) => agent.id === seed.id)) continue;
+    merged.push(seed);
     changed = true;
   }
 
@@ -55,8 +40,23 @@ const mergeDevSeedAgents = (agents: AgentUser[]): AgentUser[] => {
     if (index === -1) {
       merged.push(seed);
       changed = true;
-    } else if (DEV_SEED_AGENT_IDS.has(seed.id)) {
-      merged[index] = seed;
+      continue;
+    }
+
+    if (!DEV_SEED_AGENT_IDS.has(seed.id)) continue;
+
+    const existing = merged[index];
+    const next = {
+      ...existing,
+      email: seed.email || existing.email,
+      password: seed.password || existing.password,
+    };
+
+    if (
+      next.email !== existing.email ||
+      next.password !== existing.password
+    ) {
+      merged[index] = next;
       changed = true;
     }
   }
@@ -170,7 +170,16 @@ export const updateAgentProfile = (
   id: string,
   patch: AgentProfilePatch,
 ): AgentUser | undefined => {
-  const agents = readAgents();
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return undefined;
+
+  let agents: AgentUser[];
+  try {
+    agents = JSON.parse(raw) as AgentUser[];
+  } catch {
+    return undefined;
+  }
+
   const index = agents.findIndex((agent) => agent.id === id);
   if (index === -1) return undefined;
 
@@ -178,6 +187,11 @@ export const updateAgentProfile = (
     ...agents[index],
     ...patch,
   };
+
+  if ("coverImageDataUrl" in patch && patch.coverImageDataUrl === undefined) {
+    delete agents[index].coverImageDataUrl;
+  }
+
   writeAgents(agents);
   return agents[index];
 };

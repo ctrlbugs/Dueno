@@ -632,7 +632,7 @@ header {
         }
     }    
     .header-items {
-        & > a, & > div {            
+        & > a, & > div, & > button {            
             margin-right: 12px;
             &:last-child {
                 margin-right: 0;
@@ -669,12 +669,21 @@ header {
         }
         .topbar-profile {
             .avatar {
+                width: 40px;
+                height: 40px;
+                flex-shrink: 0;
+                overflow: hidden;
+                border-radius: 50%;
+
                 img,
+                .agent-avatar-img,
                 .agent-avatar-fallback--header,
                 .header-user-avatar-fallback {
-                    width: 40px;
-                    height: 40px;
+                    width: 100%;
+                    height: 100%;
                     object-fit: cover;
+                    object-position: center;
+                    border-radius: 50%;
                 }
             }
 
@@ -692,14 +701,33 @@ header {
 
             .dropdown-menu {
                 min-width: 300px;
+                animation: none;
+                margin-top: 0 !important;
                 .user-profile {
                     background: var(--light);
                     border-radius: $border-radius-lg;
                     padding: 16px;
                     margin-bottom: 8px;
-                    img {
-                        border: 1px solid var(--white);
+
+                    .user-profile-avatar {
+                        width: 48px;
+                        height: 48px;
+                        overflow: hidden;
+                        border-radius: 50%;
+
+                        img,
+                        .agent-avatar-img,
+                        .agent-avatar-fallback--header,
+                        .header-user-avatar-fallback {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            object-position: center;
+                            border-radius: 50%;
+                            border: 1px solid var(--white);
+                        }
                     }
+
                     h6 {
                         font-size: 16px;
                         font-weight: $font-weight-medium;
@@ -1538,6 +1566,40 @@ header {
     align-items: center;
     justify-content: center;
 }
+
+.topbar-messages,
+.staff-messages-dropdown--header,
+.topbar-profile {
+    .dropdown-menu {
+        animation: none;
+        margin-top: 0 !important;
+    }
+
+    .topbar-link,
+    .avatar.avatar-rounded {
+        border-radius: $border-radius;
+
+        &:hover,
+        &:focus,
+        &.show {
+            box-shadow: none;
+        }
+    }
+}
+
+.topbar-profile {
+    .dropdown-menu.show,
+    &.show .dropdown-menu {
+        margin-top: 0 !important;
+    }
+}
+
+.header-messages-menu,
+.header-notifications-menu {
+    animation: none;
+    margin-top: 0 !important;
+}
+
 .notification-head {
     padding: 12px 20px;
     border-bottom: 1px solid var(--border-color);
@@ -1545,6 +1607,7 @@ header {
 .notification-body {
     min-height: 280px;
     max-height: 280px;
+    overflow-y: auto;
 }
 .notification-item {
     background-color: var(--white);

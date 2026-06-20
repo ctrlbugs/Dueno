@@ -31,8 +31,8 @@ const RentListMap = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Rent List Map"
-          paths={[{ label: "Rent List Map", active: true }]}
+          title="Rent Property Map"
+          paths={[{ label: "Rent Property Map", active: true }]}
         />
         {/* End Breadscrumb */}
         {/* Start Content */}

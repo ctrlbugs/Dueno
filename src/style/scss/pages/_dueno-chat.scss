@@ -1,0 +1,455 @@
+@use '../utils' as *;
+
+.dueno-chat-inbox {
+  min-height: 560px;
+  border: 1px solid var(--gray-100);
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  background: var(--white);
+
+  &__sidebar {
+    border-right: 1px solid var(--gray-100);
+    display: flex;
+    flex-direction: column;
+    min-height: 560px;
+  }
+
+  &__sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--gray-100);
+
+    h6 {
+      font-weight: 600;
+    }
+
+    .form-check-label {
+      font-size: 13px;
+    }
+  }
+
+  &__list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 520px;
+  }
+
+  &__item {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--gray-100);
+    background: transparent;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    transition: background 0.2s ease;
+
+    &:hover,
+    &--active {
+      background: var(--light);
+    }
+
+    &--unread {
+      background: rgba(var(--primary-rgb), 0.04);
+    }
+  }
+
+  &__avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--primary-100);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__item-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    strong {
+      font-size: 14px;
+    }
+
+    small {
+      color: var(--gray-500);
+      white-space: nowrap;
+    }
+  }
+
+  &__item-subject,
+  &__item-preview,
+  &__item-meta {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-600);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-preview {
+    color: var(--gray-500);
+  }
+
+  &__badge {
+    align-self: center;
+  }
+
+  &__empty,
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+    color: var(--gray-500);
+    padding: 24px;
+    text-align: center;
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 560px;
+  }
+
+  &__panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--gray-100);
+
+    h5 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+
+  &__admin-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+
+    .form-select {
+      min-width: 160px;
+    }
+  }
+
+  &__thread {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+  }
+}
+
+.dueno-chat-thread {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  &__item {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-bottom: 18px;
+
+    &--own {
+      flex-direction: row-reverse;
+
+      .dueno-chat-thread__bubble {
+        background: rgba(var(--primary-rgb), 0.12);
+        color: var(--gray-900);
+
+        strong {
+          color: var(--primary);
+        }
+
+        &::after {
+          left: auto;
+          right: -6px;
+          border-right-color: transparent;
+          border-left-color: rgba(var(--primary-rgb), 0.12);
+          border-top-color: rgba(var(--primary-rgb), 0.12);
+        }
+      }
+
+      .dueno-chat-thread__meta {
+        text-align: right;
+      }
+    }
+  }
+
+  &__meta {
+    width: 52px;
+    flex-shrink: 0;
+    text-align: center;
+
+    small {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--gray-500);
+    }
+  }
+
+  &__avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--primary-100);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  &__bubble {
+    position: relative;
+    max-width: min(72%, 520px);
+    background: var(--light);
+    border-radius: 12px;
+    padding: 12px 14px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: -6px;
+      border: 6px solid transparent;
+      border-right-color: var(--light);
+      border-top-color: var(--light);
+    }
+
+    strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: var(--gray-700);
+    }
+
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+
+  &__attachment {
+    margin-top: 8px;
+
+    img {
+      max-width: 220px;
+      border-radius: 10px;
+      display: block;
+    }
+
+    audio {
+      width: min(240px, 100%);
+      height: 36px;
+    }
+  }
+
+  &__file-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 13px;
+
+    i {
+      font-size: 18px;
+    }
+  }
+}
+
+.dueno-chat-composer {
+  border-top: 1px solid var(--gray-100);
+  padding: 14px 16px 16px;
+  background: var(--white);
+
+  &__attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  &__attachment {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--light);
+    font-size: 12px;
+
+    img {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  }
+
+  &__attachment-remove {
+    border: 0;
+    background: transparent;
+    line-height: 1;
+    font-size: 16px;
+    color: var(--gray-600);
+  }
+
+  &__error {
+    margin: 0 0 8px;
+    color: var(--danger);
+    font-size: 13px;
+  }
+
+  &__recording {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(var(--danger-rgb), 0.08);
+    font-size: 13px;
+  }
+
+  &__recording-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--danger);
+    animation: dueno-chat-pulse 1s infinite;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__tool {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--light);
+    color: var(--gray-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+      background: var(--primary-100);
+      color: var(--primary);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__emoji-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid var(--gray-100);
+    border-radius: 12px;
+    background: var(--light);
+  }
+
+  &__emoji {
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 8px;
+
+    &:hover {
+      background: var(--white);
+    }
+  }
+
+  &__input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__input {
+    border-radius: 999px;
+    min-height: 44px;
+  }
+
+  &__send {
+    border-radius: 999px;
+    min-width: 88px;
+    min-height: 44px;
+    flex-shrink: 0;
+  }
+}
+
+@keyframes dueno-chat-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@include respond-below(lg) {
+  .dueno-chat-inbox {
+    &__sidebar,
+    &__panel {
+      min-height: auto;
+    }
+
+    &__list {
+      max-height: 280px;
+    }
+
+    &__thread {
+      min-height: 320px;
+    }
+  }
+}

@@ -10,8 +10,8 @@ import {
   togglePropertySaved,
 } from "../../../../services/propertyReviewStore";
 import { isListingNew } from "../../../../utils/listingBadge";
+import PropertyCardAgentBadge from "../../../../shared/components/PropertyCardAgentBadge";
 import {
-  resolvePropertyAgentAvatar,
   resolvePropertyPrice,
 } from "../../../../utils/propertyDisplay";
 
@@ -29,7 +29,6 @@ const BuyGridPropertyCard = ({
     isPropertySaved(property.id, userId),
   );
   const detailsPath = getPropertyDetailsPath(property);
-  const avatarSrc = resolvePropertyAgentAvatar(property);
   const displayPrice = resolvePropertyPrice(property.price);
   const showNewBadge = isListingNew(property.publishedAt, property.listedOn);
 
@@ -89,23 +88,7 @@ const BuyGridPropertyCard = ({
             </div>
             <div className="d-flex align-items-center justify-content-between position-absolute bottom-0 end-0 start-0 p-3 z-1">
               <h6 className="text-white mb-0">{displayPrice}</h6>
-              <span className="avatar avatar-md rounded-circle border-0 property-agent-avatar">
-                {property.agentId ? (
-                  <Link to={`/dueno-agent/${property.agentId}`}>
-                    <ImageWithBasePath
-                      src={avatarSrc}
-                      alt={property.agentName ?? "Agent"}
-                      className="img-fluid border border-white rounded-circle"
-                    />
-                  </Link>
-                ) : (
-                  <ImageWithBasePath
-                    src={avatarSrc}
-                    alt={property.agentName ?? "Agent"}
-                    className="img-fluid border border-white rounded-circle"
-                  />
-                )}
-              </span>
+              <PropertyCardAgentBadge property={property} />
             </div>
           </div>
           <div className="buy-grid-content">

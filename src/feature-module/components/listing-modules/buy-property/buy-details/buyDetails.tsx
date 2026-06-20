@@ -241,12 +241,12 @@ const BuyDetails = () => {
                     >
                       {galleryImages.map((image, index) => (
                         <div className="service-img-wrap" key={`${image}-${index}`}>
-                          <ImageWithBasePath
+                        <ImageWithBasePath
                             src={image}
-                            className="img-fluid"
+                          className="img-fluid"
                             alt={`${property.title} - ${index + 1}`}
-                          />
-                        </div>
+                        />
+                      </div>
                       ))}
                     </Slider>
                   </div>
@@ -257,12 +257,12 @@ const BuyDetails = () => {
                   >
                     {galleryImages.map((image, index) => (
                       <div className="slide-img" key={`thumb-${image}-${index}`}>
-                        <ImageWithBasePath
+                      <ImageWithBasePath
                           src={image}
-                          className="img-fluid"
+                        className="img-fluid"
                           alt={`${property.title} thumbnail ${index + 1}`}
-                        />
-                      </div>
+                      />
+                    </div>
                     ))}
                   </Slider>
                 </div>
@@ -321,7 +321,7 @@ const BuyDetails = () => {
                               className="col-lg-3 col-md-6"
                               key={`feature-column-${columnIndex}`}
                             >
-                              <div className="buy-property-items">
+                            <div className="buy-property-items">
                                 {column.map((item, itemIndex) => (
                                   <p
                                     key={item.value}
@@ -331,7 +331,7 @@ const BuyDetails = () => {
                                         : undefined
                                     }
                                   >
-                                    <i className="material-icons-outlined">
+                                <i className="material-icons-outlined">
                                       {item.icon}
                                     </i>
                                     <span className="feature-text">
@@ -340,10 +340,10 @@ const BuyDetails = () => {
                                     </span>
                                   </p>
                                 ))}
-                              </div>
                             </div>
+                          </div>
                           ))}
-                        </div>
+                            </div>
                       </div>
                     </div>
                   </div>
@@ -367,7 +367,7 @@ const BuyDetails = () => {
                       <div className="accordion-body">
                         {property.highlights.map((highlight) => (
                           <p className="mb-2" key={highlight}>
-                            <i className="fa-solid fa-circle-check text-success me-2 fs-18" />
+                          <i className="fa-solid fa-circle-check text-success me-2 fs-18" />
                             {highlight}
                           </p>
                         ))}
@@ -395,20 +395,20 @@ const BuyDetails = () => {
                         <div className="row row-gap-3">
                           {property.amenities.map((amenity) => (
                             <div className="col-lg-3 col-md-6" key={amenity}>
-                              <div className="buy-property-items">
+                            <div className="buy-property-items">
                                 <p className="mb-0">
-                                  <i className="material-icons-outlined">
+                                <i className="material-icons-outlined">
                                     check_circle
                                   </i>
                                   {amenity}
-                                </p>
-                              </div>
+                              </p>
                             </div>
+                          </div>
                           ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                            </div>
+                          </div>
+                            </div>
+                          </div>
                   <PropertyFloorPlans floorPlans={property.floorPlans} />
                   {/* gallery items */}
                   <BuyGalleryItem images={galleryImages} alt={property.title} />
@@ -436,16 +436,16 @@ const BuyDetails = () => {
                           poster={videoPoster}
                           title={property.title}
                         />
+                        </div>
                       </div>
                     </div>
-                  </div>
                   <PropertyFaqs faqs={property.faqs} />
                   <PropertyReviewsSection
                     propertyId={property.id}
                     fallbackRating={property.rating}
-                  />
-                </div>
-              </div>
+                                    />
+                                  </div>
+                                </div>
               <BuyLeftForm
                 propertyId={property.id}
                 propertyTitle={property.title}
@@ -456,8 +456,8 @@ const BuyDetails = () => {
                 agentAvatar={property.agentAvatar}
                 ownerInfo={property.ownerInfo}
               />
-            </div>
-            {/* end row */}
+                        </div>
+                        {/* end row */}
             <RelatedPropertiesCarousel currentPropertyId={property.id} />
           </div>
         </div>

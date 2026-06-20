@@ -2,6 +2,7 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router";
 import ScrollToTop from "../../core/common/ScrollToTop";
+import { DashboardPortalLoader } from "../../shared/components/DashboardLoaders";
 import { authRoutes, publicRoutes} from "./router.link";
 import AuthFeature from "../feathure-components/authFeature";
 import Feature from "../feathure-components/feature";
@@ -17,7 +18,7 @@ const ALLRoutes: React.FC = () => {
         <Route
           path="/admin/*"
           element={
-            <Suspense fallback={<div className="p-4">Loading admin...</div>}>
+            <Suspense fallback={<DashboardPortalLoader portal="admin" />}>
               <AdminApp />
             </Suspense>
           }
@@ -25,7 +26,7 @@ const ALLRoutes: React.FC = () => {
         <Route
           path="/agent/*"
           element={
-            <Suspense fallback={<div className="p-4">Loading agent portal...</div>}>
+            <Suspense fallback={<DashboardPortalLoader portal="agent" />}>
               <AgentApp />
             </Suspense>
           }

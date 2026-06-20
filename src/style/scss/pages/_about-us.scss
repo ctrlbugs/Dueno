@@ -73,10 +73,54 @@
             right: 50%;
         }
     }
+    .about-partners-grid {
+        margin-top: 8px;
+    }
+}
+
+.about-partners-slider-wrap {
+    margin-top: 8px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.about-partners-slider {
+    overflow: hidden;
+    padding: 4px 0;
+
+    .swiper-wrapper {
+        transition-timing-function: linear;
+    }
+
+    .swiper-slide {
+        height: auto;
+        display: flex;
+    }
 }
 
 .about-us-item-05 {
     margin-bottom: 40px;
+}
+
+.about-partner-card {
+	background: #031829;
+	border-radius: 10px;
+	box-shadow: 0px 0px 24px 0px #C5C5C540;
+	min-height: 72px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px 16px;
+	text-align: center;
+}
+
+.about-partner-logo {
+	width: auto;
+	height: 27px;
+	max-width: calc(100% - 8px);
+	object-fit: contain;
+	display: inline-block;
 }
 
 .about-us-item-06 {

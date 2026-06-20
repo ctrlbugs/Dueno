@@ -23,8 +23,8 @@ const BuyList = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Buy List"
-          paths={[{ label: "Buy List", active: true }]}
+          title="Buy Property"
+          paths={[{ label: "Buy Property", active: true }]}
         />
         {/* End Breadscrumb */}
         {/* Start Content */}

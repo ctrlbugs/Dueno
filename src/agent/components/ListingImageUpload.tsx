@@ -74,8 +74,8 @@ const ListingImageUpload = ({
         </small>
       </label>
       <p className="text-muted fs-13 mb-3">
-        Upload clear exterior and interior shots. The first photo is used as the
-        cover image.
+        Upload clear exterior and interior shots. Each photo is stamped with the
+        Dueno watermark. The first photo is used as the cover image.
       </p>
 
       {uploadError && (

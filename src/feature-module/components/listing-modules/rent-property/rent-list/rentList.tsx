@@ -23,8 +23,8 @@ const RentList = () => {
       <div className="page-wrapper">
         {/* Start Breadscrumb */}
         <Breadcrumb
-          title="Rent List"
-          paths={[{ label: "Rent List", active: true }]}
+          title="Rent Property"
+          paths={[{ label: "Rent Property", active: true }]}
         />
 
         {/* End Breadscrumb */}

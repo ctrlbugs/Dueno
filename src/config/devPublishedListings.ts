@@ -100,6 +100,7 @@ export const getPublicPublishedListings = (): EstateProperty[] => {
         "Verified listing in Festac, Amuwo Odofin, Lagos. Ideal for families seeking a secure neighbourhood with good road access and nearby amenities.",
       agentId: "agent-3",
       agentName: "Sammy Akindele",
+      agentAvatar: "assets/img/logo.svg",
       badge: "Semi-Detached",
     }),
     buildSeedListing({
@@ -124,6 +125,7 @@ export const getPublicPublishedListings = (): EstateProperty[] => {
         "Spacious 4-bedroom semi-detached duplex available for rent. Features include ensuite rooms, a boys' quarter, and dedicated parking.",
       agentId: "agent-2",
       agentName: "Emeka Nwosu",
+      agentAvatar: "assets/img/logo.svg",
       badge: "Semi-Detached",
       badgeClass: "bg-pink",
     }),

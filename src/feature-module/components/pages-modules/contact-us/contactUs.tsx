@@ -12,12 +12,15 @@ import { getDuenoServiceBySlug } from "../../../../data/duenoServices";
 import { FormEvent, useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import {
+  DuenoStatusMessage,
+  DuenoSubmitButton,
+} from "../../../../shared/components/DuenoFormFeedback";
 
-type SubmitState = "idle" | "loading" | "confirmed" | "success" | "error";
+type SubmitState = "idle" | "loading" | "success" | "error";
 
-const SUCCESS_MESSAGE = "Thank you — your enquiry has been sent.";
-const CHECK_DELAY_MS = 800;
-const SUCCESS_RESET_MS = 3000;
+const SUCCESS_MESSAGE =
+  "Thank you — your enquiry has been sent. We will get back to you shortly.";
 
 const ContactUs = () => {
   const [searchParams] = useSearchParams();
@@ -58,21 +61,6 @@ const ContactUs = () => {
     }
   }, [defaultCategory]);
 
-  useEffect(() => {
-    if (submitState !== "confirmed") return;
-    const timer = window.setTimeout(() => setSubmitState("success"), CHECK_DELAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [submitState]);
-
-  useEffect(() => {
-    if (submitState !== "success") return;
-    const timer = window.setTimeout(() => {
-      resetForm();
-      setSubmitState("idle");
-    }, SUCCESS_RESET_MS);
-    return () => window.clearTimeout(timer);
-  }, [submitState, defaultCategory, defaultSubject]);
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitState("loading");
@@ -105,7 +93,7 @@ const ContactUs = () => {
         throw new Error(data.error || "Unable to send your enquiry.");
       }
 
-      setSubmitState("confirmed");
+      setSubmitState("success");
     } catch (error) {
       setSubmitState("error");
       setFeedback(
@@ -201,13 +189,16 @@ const ContactUs = () => {
                 )}
 
                 {submitState === "success" ? (
-                  <div
-                    className="alert alert-success mb-0 contact-form-feedback contact-form-feedback--success"
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <strong>{SUCCESS_MESSAGE}</strong>
-                  </div>
+                  <DuenoStatusMessage
+                    variant="success"
+                    message={SUCCESS_MESSAGE}
+                    layout="toast"
+                    autoDismissMs={3000}
+                    onDismiss={() => {
+                      resetForm();
+                      setSubmitState("idle");
+                    }}
+                  />
                 ) : (
                   <form onSubmit={handleSubmit} noValidate>
                     <div className="visually-hidden" aria-hidden="true">
@@ -318,59 +309,20 @@ const ContactUs = () => {
                           />
                         </div>
                       </div>
-                      {submitState === "error" ? (
+                      {submitState === "error" && feedback ? (
                         <div className="col-md-12">
-                          <div className="alert alert-danger py-2" role="alert">
-                            {feedback}
-                          </div>
+                          <DuenoStatusMessage variant="error" message={feedback} />
                         </div>
                       ) : null}
                       <div className="col-md-12">
-                        <button
-                          type="submit"
-                          className={`btn btn-lg btn-dark w-100 w-md-auto contact-form-submit${
-                            submitState === "loading" || submitState === "confirmed"
-                              ? " contact-form-submit--pending"
-                              : ""
-                          }`}
-                          disabled={
-                            submitState === "loading" || submitState === "confirmed"
-                          }
-                          aria-busy={
-                            submitState === "loading" || submitState === "confirmed"
-                          }
+                        <DuenoSubmitButton
+                          variant="dark"
+                          className="btn-lg w-100 w-md-auto"
+                          isLoading={submitState === "loading"}
+                          loadingLabel="Sending…"
                         >
-                          {submitState === "loading" ? (
-                            <span
-                              className="spinner-border contact-form-submit__spinner"
-                              role="status"
-                              aria-label="Sending enquiry"
-                            />
-                          ) : submitState === "confirmed" ? (
-                            <span
-                              className="contact-form-submit__check"
-                              role="status"
-                              aria-label="Enquiry sent"
-                            >
-                              <svg
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                              >
-                                <path
-                                  d="M2.5 6L5 8.5L9.5 3.5"
-                                  stroke="currentColor"
-                                  strokeWidth="1.75"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </span>
-                          ) : (
-                            "Submit Enquiry"
-                          )}
-                        </button>
+                          Submit Enquiry
+                        </DuenoSubmitButton>
                       </div>
                     </div>
                   </form>

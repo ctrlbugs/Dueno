@@ -10,6 +10,10 @@ import { useAuth } from "../context/AuthContext";
 import { getPostLoginRedirect } from "../services/authService";
 import { all_routes } from "../feature-module/routes/all_routes";
 import { AgentSearchProvider } from "./context/AgentSearchContext";
+import {
+  DashboardPageLoader,
+  DashboardPortalLoader,
+} from "../shared/components/DashboardLoaders";
 
 const AgentLayout = lazy(() => import("./layout/AgentLayout"));
 
@@ -24,14 +28,14 @@ const AgentProfileSettingsPage = lazy(
 
 const AgentProtectedRoutes = () => (
   <AgentSearchProvider>
-    <Suspense fallback={<div className="p-4">Loading...</div>}>
+    <Suspense fallback={<DashboardPortalLoader portal="agent" />}>
       <AgentLayout />
     </Suspense>
   </AgentSearchProvider>
 );
 
 const AgentRoutes = () => (
-  <Suspense fallback={<div className="p-4">Loading agent portal...</div>}>
+  <Suspense fallback={<DashboardPortalLoader portal="agent" />}>
     <Routes>
       <Route path="pending-review" element={<AgentPendingPage />} />
       <Route element={<AgentProtectedRoutes />}>

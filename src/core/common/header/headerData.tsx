@@ -62,16 +62,16 @@ export const header = [
     ],
   },
   {
-    tittle: "Blog",
+    tittle: "About Us",
     showAsTab: false,
     separateRoute: false,
-    base: "blog",
+    base: "about",
     icon: "expand_more",
     asDirectLink: true,
     menu: [
       {
-        menuValue: "Blog Grid",
-        route: all_routes.blogGrid,
+        menuValue: "About Us",
+        route: all_routes.aboutUs,
         hasSubRoute: false,
         showSubRoute: false,
         subMenus: [],

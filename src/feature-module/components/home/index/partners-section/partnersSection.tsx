@@ -1,5 +1,6 @@
 import Slider from "react-slick";
 import ImageWithBasePath from "../../../../../core/imageWithBasePath";
+import { PARTNER_LOGOS } from "../../../../../data/partnerLogos";
 
 const PartnersSection = () => {
   const Partner_Slider = {
@@ -50,16 +51,15 @@ const PartnersSection = () => {
             data-aos="fade-down"
             data-aos-duration={1000}
           >
-            <h2 className="mb-2 text-center">
-              Hundreds of Partners Around the World
-            </h2>
+            <h2 className="mb-2 text-center">Trusted Partners Across Nigeria</h2>
             <div className="sec-line">
               <span className="sec-line1" />
               <span className="sec-line2" />
             </div>
             <p className="mb-0 text-center">
-              Every day, we build trust through communication, transparency, and
-              results.
+              Dueno Property works with leading brands and service providers
+              across Nigeria to deliver verified listings, secure transactions,
+              and a seamless property experience.
             </p>
           </div>
           {/* end title */}
@@ -67,97 +67,22 @@ const PartnersSection = () => {
             {...Partner_Slider}
             className="partners-slide-item partners-slider"
           >
-            <div
-              className="partners-slide aos"
-              data-aos="fade-right"
-              data-aos-duration={1000}
-            >
-              <div className="partners-items">
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-1.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
-              </div>
-            </div>
-            <div className="partners-slide">
+            {PARTNER_LOGOS.map((logo, index) => (
               <div
-                className="partners-items aos"
+                key={logo}
+                className="partners-slide aos"
                 data-aos="fade-right"
-                data-aos-duration={1500}
+                data-aos-duration={1000 + (index % 3) * 500}
               >
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-2.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
+                <div className="partners-items">
+                  <ImageWithBasePath
+                    src={logo}
+                    alt={`Partner logo ${index + 1}`}
+                    className="img-fluid partners-icon"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="partners-slide">
-              <div
-                className="partners-items aos"
-                data-aos="fade-right"
-                data-aos-duration={1000}
-              >
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-3.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
-              </div>
-            </div>
-            <div className="partners-slide">
-              <div
-                className="partners-items aos"
-                data-aos="fade-right"
-                data-aos-duration={1500}
-              >
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-4.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
-              </div>
-            </div>
-            <div className="partners-slide">
-              <div
-                className="partners-items aos"
-                data-aos="fade-right"
-                data-aos-duration={1000}
-              >
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-5.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
-              </div>
-            </div>
-            <div className="partners-slide">
-              <div
-                className="partners-items aos"
-                data-aos="fade-right"
-                data-aos-duration={1500}
-              >
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-3.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
-              </div>
-            </div>
-            <div className="partners-slide">
-              <div
-                className="partners-items aos"
-                data-aos="fade-right"
-                data-aos-duration={1000}
-              >
-                <ImageWithBasePath
-                  src="assets/img/home/icons/partners-img-2.svg"
-                  alt="partners-icon-1.svg"
-                  className="img-fluid partners-icon"
-                />
-              </div>
-            </div>
+            ))}
           </Slider>
         </div>
       </section>
